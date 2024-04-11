@@ -24,14 +24,18 @@ Content-Type: application/json
 {
   "company_id": null,
   "department_id": null,
-  "email": "example@example.com",
-  "password": "password123",
-  "firstname": "John",
+  "email": "test@test.com",
+  "password": "123",
+  "firstname": "Casper",
   "lastname": "Doe",
   "phone_number": "1234567890",
   "user_role": "admin"
 }
 
-###
+### Get a user by ID
 
+GET http://127.0.0.1:8000/user/getbyid?user_id=1
+Accept: application/json
+
+###
 

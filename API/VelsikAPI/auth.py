@@ -7,7 +7,7 @@ from Database.DBConnection import DBConnection
 db = DBConnection()
 
 
-class AuthHandler():
+class AuthHandler:
     security = HTTPBearer()
     secret = 'SECRET'
 

@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'services/authservice.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'home.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController emailController = TextEditingController();
+    final TextEditingController passwordController = TextEditingController();
     return Scaffold(
       body: Center(
         child: Padding(
@@ -16,22 +21,36 @@ class LoginPage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 24, // Change the font size as desired
                   fontWeight: FontWeight.bold)),
-              const TextField(
-                decoration: InputDecoration(
+              TextField(
+                controller: emailController,
+                decoration: const InputDecoration(
                   labelText: 'Email',
                 ),
               ),
               const SizedBox(height: 20),
-              const TextField(
+              TextField(
+                controller: passwordController,
                 obscureText: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Password',
                 ),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  // Add login functionality here
+                onPressed: () async {
+                  final SharedPreferences prefs = await SharedPreferences.getInstance();
+                  final AuthService authService = AuthService(prefs);
+                  await authService.signIn(emailController.text, passwordController.text);
+
+                  // Check if the user is logged in after sign-in
+                  bool isLoggedIn = await authService.isLoggedIn();
+                  if (isLoggedIn) {
+                    // Navigate to the home page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const HomePage()),
+                    );
+                  }
                 },
                 child: const Text('Login'),
               ),

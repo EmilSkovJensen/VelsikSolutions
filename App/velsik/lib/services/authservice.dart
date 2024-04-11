@@ -9,7 +9,7 @@ class AuthService {
 
   Future<void> signIn(String email, String password) async {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/login'),
+      Uri.parse('http://10.0.2.2:8000/login'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -20,8 +20,28 @@ class AuthService {
     );
 
     if (response.statusCode == 200) {
-      // If server returns 200 OK, save authentication state
-      await _prefs.setBool('isLoggedIn', true);
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      final String token = responseData['token'];
+
+      // Send another HTTP request to decode the token and retrieve the user ID
+      final decodeResponse = await http.get(
+        Uri.parse('http://10.0.2.2:8000/decode_token?token=$token'),
+      );
+
+      if (decodeResponse.statusCode == 200) {
+        final Map<String, dynamic> decodeData = jsonDecode(decodeResponse.body);
+        final int userId = decodeData['user_id'];
+
+        // Store the token and user ID securely
+        await _prefs.setString('token', token);
+        await _prefs.setInt('userId', userId);
+
+        // Save authentication state
+        await _prefs.setBool('isLoggedIn', true);
+      } else {
+        // Handle error when decoding token
+        throw Exception('Failed to decode token');
+      }
     } else {
       // Handle authentication error
       throw Exception('Failed to sign in');
@@ -32,6 +52,10 @@ class AuthService {
     // Perform sign out logic here
     // Clear authentication state
     await _prefs.setBool('isLoggedIn', false);
+
+    // Clear token and user ID
+    await _prefs.remove('token');
+    await _prefs.remove('userId');
   }
 
   Future<bool> isLoggedIn() async {

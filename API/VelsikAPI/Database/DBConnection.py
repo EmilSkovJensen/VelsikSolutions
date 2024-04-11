@@ -1,5 +1,5 @@
 import psycopg2
-import Database.Models.User as User
+from Database.Models.User import User
 from Database.BCrypt import BCryptTool
 from configparser import ConfigParser
 
@@ -27,6 +27,37 @@ class DBConnection:
             print("Error executing SQL query:", e)
 
         return companies
+
+    def get_user_by_user_id(self, user_id):
+        connection = psycopg2.connect(self.connection_string)
+        if not connection:
+            print("Database connection not established.")
+            return None
+
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT * FROM Users WHERE user_id = %s", (user_id, ))
+
+                data = cursor.fetchone()
+
+                print(data[3])
+
+                user = User(
+                    user_id=data[0],
+                    company_id=data[1],
+                    department_id=data[2],
+                    email=data[3],
+                    password=data[4],
+                    firstname=data[5],
+                    lastname=data[6],
+                    phone_number=data[7],
+                    user_role=data[8]
+                )
+
+        except psycopg2.Error as e:
+            print("Error executing SQL query:", e)
+
+        return user
 
     def insert_user(self, user: User):
         connection = psycopg2.connect(self.connection_string)

@@ -2,10 +2,20 @@ from fastapi import FastAPI, Depends, HTTPException
 from Database.DBConnection import DBConnection
 from Database.Models.User import User
 from auth import AuthHandler
+from fastapi.middleware.cors import CORSMiddleware
+from typing import Optional
 
 app = FastAPI()
 db = DBConnection()
 auth_handler = AuthHandler()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Adjust this according to your frontend's domain
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["*"],
+    allow_credentials=True,
+)
 
 
 @app.get("/")
@@ -51,3 +61,15 @@ async def login(data: dict):
             raise HTTPException(status_code=401, detail="Invalid credentials")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal Server Error: {e}")
+
+
+@app.get("/decode_token")
+async def decode_token(token: str):
+    user_id = auth_handler.decode_token(token)
+    return {"user_id": user_id}
+
+
+@app.get("/user/getbyid")
+async def get_user_by_id(user_id: int):
+    user = db.get_user_by_user_id(user_id)
+    return {"user": user}
