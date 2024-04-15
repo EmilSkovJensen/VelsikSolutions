@@ -4,7 +4,7 @@ from Database.BCrypt import BCryptTool
 from configparser import ConfigParser
 
 
-class DBConnection:
+class UserConnection:
     def __init__(self):
         self.config = ConfigParser()
         self.config.read("appsettings.ini")

@@ -2,9 +2,9 @@ import jwt
 from fastapi import HTTPException, Security
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from datetime import datetime, timedelta
-from Database.DBConnection import DBConnection
+from Database.UserConnection import UserConnection
 
-db = DBConnection()
+db = UserConnection()
 
 
 class AuthHandler:

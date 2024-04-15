@@ -1,12 +1,14 @@
 from fastapi import FastAPI, Depends, HTTPException
-from Database.DBConnection import DBConnection
+from Database.QuestionConnection import QuestionConnection
+from Database.UserConnection import UserConnection
 from Database.Models.User import User
 from auth import AuthHandler
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
 
 app = FastAPI()
-db = DBConnection()
+user_db = UserConnection()
+question_db = QuestionConnection()
 auth_handler = AuthHandler()
 
 app.add_middleware(
@@ -20,7 +22,7 @@ app.add_middleware(
 
 @app.get("/")
 async def root(user_id=Depends(auth_handler.auth_wrapper)):
-    result = db.get_all_companies()
+    result = user_db.get_all_companies()
     return {"companies": result}
 
 
@@ -39,7 +41,7 @@ async def insert_user(data: dict):
             user_role=data.get("user_role")
         )
 
-        db.insert_user(user)
+        user_db.insert_user(user)
 
         return {"message": "User created successfully"}
     except Exception as e:
@@ -52,7 +54,7 @@ async def login(data: dict):
         if not data:
             raise HTTPException(status_code=400, detail="Email and password are required")
 
-        authenticated_user = db.compare_passwords(data.get("email"), data.get("password"))
+        authenticated_user = user_db.compare_passwords(data.get("email"), data.get("password"))
 
         if authenticated_user:
             token = auth_handler.encode_token(authenticated_user[0])
@@ -71,5 +73,10 @@ async def decode_token(token: str):
 
 @app.get("/user/getbyid")
 async def get_user_by_id(user_id: int):
-    user = db.get_user_by_user_id(user_id)
+    user = user_db.get_user_by_user_id(user_id)
     return {"user": user}
+
+@app.get("/question/get_template_questions")
+async def get_template_questions(apv_type: str):
+    questions = question_db.get_template_questions(apv_type)
+    return {"questions": questions}
