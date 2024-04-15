@@ -1,9 +1,9 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'services/authservice.dart';
 import 'login.dart';
+import 'services/userservice.dart';
+import 'apv.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,70 +13,163 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String _welcomeMessage = 'Welcome';
+  final UserService userService = UserService();
 
+  //User related
+  int _userId = 0;
+  bool _isSuperUser = false;
+  //
+
+  bool _isLoading = true;
+  
   @override
   void initState() {
     super.initState();
-    _getUserById();
-  }
-
-  Future<void> _getUserById() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final int? userId = prefs.getInt('userId');
-    if (userId != null) {
-      final response = await http.get(
-        Uri.parse('http://10.0.2.2:8000/user/getbyid?user_id=$userId'),
-      );
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = jsonDecode(response.body);
-        final String firstName = responseData['user']['firstname'];
+    userService.getUserById().then((user) {
+      if (user != null && user['user']['user_role'] == 'superuser') {
         setState(() {
-          _welcomeMessage = 'Welcome, $firstName';
+          _userId = user['user']['user_id'];
+          _isSuperUser = true;
+          _isLoading = false;
         });
       } else {
         setState(() {
-          _welcomeMessage = 'Failed to retrieve user';
+          _isLoading = false;
         });
       }
+    });
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    if(_isLoading == true) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
     } else {
-      setState(() {
-        _welcomeMessage = 'User ID not found';
-      });
+      if (!_isSuperUser) {
+        // If the user is not an admin, display an empty page
+        return Scaffold(body: Container()); 
+      }
+
+      return Scaffold(
+        body: Stack(
+          children: [
+            Positioned(
+              top: 100,
+              left: 0, 
+              right: 0, 
+              child: Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: Center(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ApvPage(userid: _userId,)),
+                      );
+                    },
+                    child: Image.asset('assets/apv.png'),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 200,
+              left: 0, 
+              right: 0, 
+              child: Padding(
+                padding: const EdgeInsets.all(18.0), 
+                child: Center(
+                  child: GestureDetector(
+                    onTap: () async {
+                      final SharedPreferences prefs = await SharedPreferences.getInstance();
+                      final AuthService authService = AuthService(prefs);
+                      await authService.signOut();
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const LoginPage()),
+                      );
+                    },
+                    child: Image.asset('assets/handlingsplan.png'),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 300, 
+              left: 0, 
+              right: 0, 
+              child: Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: Center(
+                  child: GestureDetector(
+                    onTap: () async {
+                      final SharedPreferences prefs = await SharedPreferences.getInstance();
+                      final AuthService authService = AuthService(prefs);
+                      await authService.signOut();
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const LoginPage()),
+                      );
+                    },
+                    child: Image.asset('assets/moeder-og-referater.png'),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 400, 
+              left: 0, 
+              right: 0, 
+              child: Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: Center(
+                  child: GestureDetector(
+                    onTap: () async {
+                      final SharedPreferences prefs = await SharedPreferences.getInstance();
+                      final AuthService authService = AuthService(prefs);
+                      await authService.signOut();
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const LoginPage()),
+                      );
+                    },
+                    child: Image.asset('assets/medarbejdere.png'),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 16, 
+              left: 0,
+              right: 0,
+              child: Center(
+                child: ElevatedButton(
+                  onPressed: () async {
+                    final SharedPreferences prefs = await SharedPreferences.getInstance();
+                    final AuthService authService = AuthService(prefs);
+                    await authService.signOut();
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const LoginPage()),
+                    );
+                  },
+                  child: const Text('Logout'),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
     }
   }
-
-  @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    body: Stack(
-      children: [
-        Center(
-          child: Text(_welcomeMessage),
-        ),
-        Positioned(
-          bottom: 16, // Adjust the value to change the button's distance from the bottom
-          left: 0,
-          right: 0,
-          child: Center(
-            child: ElevatedButton(
-              onPressed: () async {
-                final SharedPreferences prefs = await SharedPreferences.getInstance();
-                final AuthService authService = AuthService(prefs);
-                await authService.signOut();
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginPage()),
-                );
-              },
-              child: const Text('Logout'),
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
 }
 
-}
+
