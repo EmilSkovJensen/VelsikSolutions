@@ -26,8 +26,8 @@ Content-Type: application/json
   "department_id": null,
   "email": "test@test.com",
   "password": "123",
-  "firstname": "Casper",
-  "lastname": "Doe",
+  "firstname": "Emil",
+  "lastname": "Skov",
   "phone_number": "1234567890",
   "user_role": "admin"
 }
