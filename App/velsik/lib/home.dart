@@ -50,15 +50,27 @@ class _HomePageState extends State<HomePage> {
       );
     } else {
       if (!_isSuperUser) {
-        // If the user is not an admin, display an empty page
-        return Scaffold(body: Container()); 
+        // If the user is not a super user, display an empty page
+        return Scaffold(
+            appBar: AppBar(
+              elevation: 0,
+              backgroundColor: Colors.white,
+              automaticallyImplyLeading: false,
+            ),
+            body: Container()
+          ); 
       }
 
       return Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+          automaticallyImplyLeading: false,
+        ),
         body: Stack(
           children: [
             Positioned(
-              top: 100,
+              top: 20,
               left: 0, 
               right: 0, 
               child: Padding(
@@ -68,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ApvPage(userid: _userId,)),
+                        MaterialPageRoute(builder: (context) => ApvPage(userid: _userId)),
                       );
                     },
                     child: Image.asset('assets/apv.png'),
@@ -77,21 +89,17 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Positioned(
-              top: 200,
+              top: 120,
               left: 0, 
               right: 0, 
               child: Padding(
                 padding: const EdgeInsets.all(18.0), 
                 child: Center(
                   child: GestureDetector(
-                    onTap: () async {
-                      final SharedPreferences prefs = await SharedPreferences.getInstance();
-                      final AuthService authService = AuthService(prefs);
-                      await authService.signOut();
-
+                    onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const LoginPage()),
+                        MaterialPageRoute(builder: (context) => ApvPage(userid: _userId)),
                       );
                     },
                     child: Image.asset('assets/handlingsplan.png'),
@@ -100,21 +108,17 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Positioned(
-              top: 300, 
+              top: 220, 
               left: 0, 
               right: 0, 
               child: Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: Center(
                   child: GestureDetector(
-                    onTap: () async {
-                      final SharedPreferences prefs = await SharedPreferences.getInstance();
-                      final AuthService authService = AuthService(prefs);
-                      await authService.signOut();
-
+                    onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const LoginPage()),
+                        MaterialPageRoute(builder: (context) => ApvPage(userid: _userId)),
                       );
                     },
                     child: Image.asset('assets/moeder-og-referater.png'),
@@ -123,21 +127,17 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Positioned(
-              top: 400, 
+              top: 320, 
               left: 0, 
               right: 0, 
               child: Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: Center(
                   child: GestureDetector(
-                    onTap: () async {
-                      final SharedPreferences prefs = await SharedPreferences.getInstance();
-                      final AuthService authService = AuthService(prefs);
-                      await authService.signOut();
-
+                    onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const LoginPage()),
+                        MaterialPageRoute(builder: (context) => ApvPage(userid: _userId)),
                       );
                     },
                     child: Image.asset('assets/medarbejdere.png'),

@@ -25,3 +25,6 @@ flutter:
     - assets/handlingsplan.png
     - assets/moeder-og-referater.png
     - assets/medarbejdere.png
+    - assets/opret-apv.png
+    - assets/nuvaerende-apv.png
+    - assets/tidligere-apv.png

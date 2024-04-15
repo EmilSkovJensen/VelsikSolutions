@@ -11,100 +11,79 @@ class ApvPage extends StatefulWidget {
 }
 
 class _ApvPageState extends State<ApvPage> {
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back_ios,
+          size: 20,
+          color: Colors.black,),
+
+
+        ),
+      ),
       body: Stack(
         children: [
           Positioned(
-            top: 100,
+            top: 20,
             left: 0, 
             right: 0, 
             child: Padding(
               padding: const EdgeInsets.all(18.0),
               child: Center(
                 child: GestureDetector(
-                  onTap: () async {
-                    final SharedPreferences prefs = await SharedPreferences.getInstance();
-                    final AuthService authService = AuthService(prefs);
-                    await authService.signOut();
-
+                  onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => const LoginPage()),
                     );
                   },
-                  child: Image.asset('assets/apv.png'),
+                  child: Image.asset('assets/opret-apv.png'),
                 ),
               ),
             ),
           ),
           Positioned(
-            top: 200,
+            top: 120,
             left: 0, 
             right: 0, 
             child: Padding(
               padding: const EdgeInsets.all(18.0), 
               child: Center(
                 child: GestureDetector(
-                  onTap: () async {
-                    final SharedPreferences prefs = await SharedPreferences.getInstance();
-                    final AuthService authService = AuthService(prefs);
-                    await authService.signOut();
-
+                  onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => const LoginPage()),
                     );
                   },
-                  child: Image.asset('assets/handlingsplan.png'),
+                  child: Image.asset('assets/nuvaerende-apv.png'),
                 ),
               ),
             ),
           ),
           Positioned(
-            top: 300, 
+            top: 220, 
             left: 0, 
             right: 0, 
             child: Padding(
               padding: const EdgeInsets.all(18.0),
               child: Center(
                 child: GestureDetector(
-                  onTap: () async {
-                    final SharedPreferences prefs = await SharedPreferences.getInstance();
-                    final AuthService authService = AuthService(prefs);
-                    await authService.signOut();
-
+                  onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => const LoginPage()),
                     );
                   },
-                  child: Image.asset('assets/moeder-og-referater.png'),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 400, 
-            left: 0, 
-            right: 0, 
-            child: Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: Center(
-                child: GestureDetector(
-                  onTap: () async {
-                    final SharedPreferences prefs = await SharedPreferences.getInstance();
-                    final AuthService authService = AuthService(prefs);
-                    await authService.signOut();
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const LoginPage()),
-                    );
-                  },
-                  child: Image.asset('assets/medarbejdere.png'),
+                  child: Image.asset('assets/tidligere-apv.png'),
                 ),
               ),
             ),
