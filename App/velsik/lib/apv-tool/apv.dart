@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'services/authservice.dart';
-import 'login.dart';
+import '../services/authservice.dart';
+import '../login.dart';
+import 'create-apv/choose-industry.dart';
 
 class ApvPage extends StatefulWidget {
   const ApvPage({super.key, required int userid});
@@ -11,6 +12,7 @@ class ApvPage extends StatefulWidget {
 }
 
 class _ApvPageState extends State<ApvPage> {
+
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +44,7 @@ class _ApvPageState extends State<ApvPage> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const LoginPage()),
+                      MaterialPageRoute(builder: (context) => const ApvIndustryPage()),
                     );
                   },
                   child: Image.asset('assets/opret-apv.png'),
