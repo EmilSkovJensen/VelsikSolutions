@@ -76,7 +76,13 @@ async def get_user_by_id(user_id: int):
     user = user_db.get_user_by_user_id(user_id)
     return {"user": user}
 
+
 @app.get("/apv/get_template_questions")
 async def get_template_questions(apv_type: str):
     questions = apv_db.get_template_questions(apv_type)
     return {"questions": questions}
+
+
+@app.post("/apv/insert")
+async def insert_apv(data: dict, user_id=Depends(auth_handler.auth_wrapper)):
+    return True
