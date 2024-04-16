@@ -1,5 +1,5 @@
 import psycopg2
-from Database.Models.User import User
+from Database.Models.APV import APV
 from Database.BCrypt import BCryptTool
 from configparser import ConfigParser
 
@@ -30,12 +30,8 @@ class APVConnection:
 
         return questions
 
-    def insert_apv_questions(self, apv_id, questions):
-        connection = psycopg2.connect(self.connection_string)
-        if not connection:
-            print("Database connection not established.")
-            return None
-
+    @staticmethod
+    def insert_apv_questions(connection, apv_id, questions):
         try:
             with connection.cursor() as cursor:
                 for question in questions:
@@ -44,5 +40,38 @@ class APVConnection:
                         (apv_id, question["placement_no"], question["question_title"], question["question_text"]))
 
         except psycopg2.Error as e:
-            print("Error executing SQL query:", e)
+            raise ValueError("Error executing SQL query:", e)
 
+    @staticmethod
+    def insert_user_apv_relations(connection, apv_id, users):
+        try:
+            with connection.cursor() as cursor:
+                for user in users:
+                    cursor.execute(
+                        "INSERT INTO user_apv_relation(apv_id, user_id) VALUES (%s, %s)",
+                        (apv_id, user[0]))
+
+        except psycopg2.Error as e:
+            raise ValueError("Error executing SQL query:", e)
+
+    def insert_apv(self, apv: APV):
+        connection = psycopg2.connect(self.connection_string)
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                            INSERT INTO apv (apv_id, company_id, start_date, end_date)
+                            VALUES (%s, %s, %s, %s) RETURNING apv_id
+                        """, (apv.apv_id, apv.company_id, apv.start_date, apv.end_date))
+
+                apv_id = cursor.fetchone()[0]
+
+                self.insert_apv_questions(apv_id, apv.questions)
+                self.insert_user_apv_relations(apv_id, apv.users)
+
+            # Commit the transaction
+            connection.commit()
+            print("Successfully inserted new apv")
+        except psycopg2.Error as e:
+            # Rollback the transaction in case of error
+            connection.rollback()
+            print("Error inserting user:", e)

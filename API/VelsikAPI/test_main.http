@@ -39,7 +39,7 @@ Accept: application/json
 
 ### Get template questions
 
-GET http://127.0.0.1:8000/question/get_template_questions?apv_type=Murervirksomheder
+GET http://127.0.0.1:8000/apv/get_template_questions?apv_type=Murervirksomheder
 Accept: application/json
 
 ###
