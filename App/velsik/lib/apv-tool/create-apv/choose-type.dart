@@ -34,8 +34,8 @@ class _ApvTypePageState extends State<ApvTypePage> {
 
 
         ),
-        centerTitle: true, // Centering the title
-        title: Text("Vælg underbranche"), // Add your title here
+        centerTitle: true,
+        title: Text("Vælg underbranche"), 
       ),
           body: Align(
             alignment: Alignment.center,

@@ -66,6 +66,8 @@ class _HomePageState extends State<HomePage> {
           elevation: 0,
           backgroundColor: Colors.white,
           automaticallyImplyLeading: false,
+          centerTitle: true, 
+        title: Text("Unikabyg A/S"), 
         ),
         body: Stack(
           children: [

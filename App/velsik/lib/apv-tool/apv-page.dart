@@ -31,8 +31,8 @@ class _ApvPageState extends State<ApvPage> {
 
 
         ),
-        centerTitle: true, // Centering the title
-        title: Text("APV Værktøj"), // Add your title here
+        centerTitle: true, 
+        title: Text("APV Værktøj"), 
       ),
       body: Stack(
         children: [

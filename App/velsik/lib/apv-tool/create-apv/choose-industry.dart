@@ -27,8 +27,8 @@ class _ApvIndustryPageState extends State<ApvIndustryPage> {
 
 
         ),
-        centerTitle: true, // Centering the title
-        title: Text("Vælg branche"), // Add your title here
+        centerTitle: true, 
+        title: Text("Vælg branche"), 
       ),
       body: Stack(
         children: [
