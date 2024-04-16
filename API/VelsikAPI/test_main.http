@@ -42,6 +42,9 @@ Accept: application/json
 GET http://127.0.0.1:8000/apv/get_template_questions?apv_type=Murervirksomheder
 Accept: application/json
 
+### Get types by category name
+
+GET http://127.0.0.1:8000/apv/get_types?apv_category=Bygge og anlæg
+Accept: application/json
+
 ###
-
-

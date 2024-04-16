@@ -86,3 +86,9 @@ async def get_template_questions(apv_type: str):
 @app.post("/apv/insert")
 async def insert_apv(data: dict, user_id=Depends(auth_handler.auth_wrapper)):
     return True
+
+
+@app.get("/apv/get_types")
+async def get_types(apv_category: str):
+    types = apv_db.get_apv_types(apv_category)
+    return {"types": types}

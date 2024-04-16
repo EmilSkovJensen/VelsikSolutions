@@ -55,6 +55,38 @@ class ApvService {
     }
   }
 
+  Future<List<String>?> getApvTypesByIndustry(String industry) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    if (token != null) {
+      final response = await http.get(
+        Uri.parse('http://10.0.2.2:8000/apv/get_types?apv_category=$industry'),
+        headers: {
+          'Content-Type': 'application/json', // Set the content type to JSON
+          'Authorization': 'Bearer $token', // Include the token in the request headers
+        },
+      );
+      if (response.statusCode == 200) {
+        final String responseBody = utf8.decode(response.bodyBytes); // Decode response body using UTF-8 to be able to see Danish letters in application
+        final Map<String, dynamic> responseData = jsonDecode(responseBody);
+        final List<String> types = [];
+
+        for(final obj in responseData['types']){
+          types.add(obj[0]);
+        }
+
+        return types;
+      }else {
+        return null; //ERROR HANDLING
+      }
+    }else {
+      return null; //ERROR HANDLING
+    }
+  }
+
+
+
+
 
 
 

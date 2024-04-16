@@ -30,6 +30,26 @@ class APVConnection:
 
         return questions
 
+    def get_apv_types(self, category_name):
+        connection = psycopg2.connect(self.connection_string)
+        if not connection:
+            print("Database connection not established.")
+            return None
+
+        types = []
+
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT apv_type_name FROM apv_type WHERE apv_category_id = (SELECT apv_category_id FROM apv_category WHERE apv_category_name = %s)",
+                    (category_name,))
+
+                types = cursor.fetchall()
+        except psycopg2.Error as e:
+            print("Error executing SQL query:", e)
+
+        return types
+
     @staticmethod
     def insert_apv_questions(connection, apv_id, questions):
         try:

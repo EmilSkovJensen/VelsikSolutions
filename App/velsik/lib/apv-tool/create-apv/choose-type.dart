@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import '/home.dart';
+import 'package:velsik/home.dart';
+import 'package:velsik/services/apvservice.dart';
 
 class ApvTypePage extends StatefulWidget {
   final String industry;
@@ -13,20 +13,25 @@ class ApvTypePage extends StatefulWidget {
 
 
 class _ApvTypePageState extends State<ApvTypePage> {
-
-  List types = [];
+  final ApvService apvService = ApvService();
+  List<String> apvTypes = [];
   String? selectedType;
 
  @override
   void initState() {
     super.initState();
 
-    types = ["Murervirksomheder", "VVS"];
-
+    apvService.getApvTypesByIndustry(widget.industry).then((types) {
+      if(types != null){
+        setState(() {
+          apvTypes = types;
+        });
+      } 
+    });
   }
+
   @override
   Widget build(BuildContext context) {
-    
         return Scaffold(
           appBar: AppBar(
         elevation: 0,
@@ -40,14 +45,14 @@ class _ApvTypePageState extends State<ApvTypePage> {
           color: Colors.black,),
         ),
         centerTitle: true,
-        title: Text("Vælg underbranche"), 
+        title: const Text("Vælg typen"), 
       ),
           body: Align(
             alignment: Alignment.center,
            child: ListView.builder(
-        itemCount: types.length,
+        itemCount: apvTypes.length,
         itemBuilder: (context, index) {
-          final type = types[index];
+          final type = apvTypes[index];
           return ListTile(
             leading: Radio<String>(
               value: type,
@@ -74,10 +79,10 @@ class _ApvTypePageState extends State<ApvTypePage> {
           onPressed: selectedType != null ? () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => HomePage()),
+              MaterialPageRoute(builder: (context) => const HomePage()),
             );
           } : null, // Disable the button if no type is selected
-          child: Text('Næste'),
+          child: const Text('Næste'),
         ),
       ),
     );
