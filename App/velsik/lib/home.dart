@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'services/authservice.dart';
 import 'login.dart';
 import 'services/userservice.dart';
-import 'apv-tool/apv.dart';
+import 'apv-tool/apv-page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -66,6 +66,8 @@ class _HomePageState extends State<HomePage> {
           elevation: 0,
           backgroundColor: Colors.white,
           automaticallyImplyLeading: false,
+          centerTitle: true, 
+        title: Text("Unikabyg A/S"), 
         ),
         body: Stack(
           children: [

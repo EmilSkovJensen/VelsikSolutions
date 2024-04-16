@@ -27,9 +27,12 @@ class _ApvPageState extends State<ApvPage> {
           icon: const Icon(Icons.arrow_back_ios,
           size: 20,
           color: Colors.black,),
+          
 
 
         ),
+        centerTitle: true, 
+        title: Text("APV Værktøj"), 
       ),
       body: Stack(
         children: [
