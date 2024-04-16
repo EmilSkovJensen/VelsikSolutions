@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException
-from Database.QuestionConnection import QuestionConnection
+from Database.APVConnection import APVConnection
 from Database.UserConnection import UserConnection
 from Database.Models.User import User
 from auth import AuthHandler
@@ -8,7 +8,7 @@ from typing import Optional
 
 app = FastAPI()
 user_db = UserConnection()
-question_db = QuestionConnection()
+apv_db = APVConnection()
 auth_handler = AuthHandler()
 
 app.add_middleware(
@@ -76,7 +76,7 @@ async def get_user_by_id(user_id: int):
     user = user_db.get_user_by_user_id(user_id)
     return {"user": user}
 
-@app.get("/question/get_template_questions")
+@app.get("/apv/get_template_questions")
 async def get_template_questions(apv_type: str):
-    questions = question_db.get_template_questions(apv_type)
+    questions = apv_db.get_template_questions(apv_type)
     return {"questions": questions}
