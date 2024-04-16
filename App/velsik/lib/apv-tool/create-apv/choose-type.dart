@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import '/home.dart';
 
 class ApvTypePage extends StatefulWidget {
   final String industry;
@@ -13,10 +14,16 @@ class ApvTypePage extends StatefulWidget {
 
 class _ApvTypePageState extends State<ApvTypePage> {
 
-  List types = ["murervirksomheder"];
+  List types = [];
   String? selectedType;
 
+ @override
+  void initState() {
+    super.initState();
 
+    types = ["Murervirksomheder", "VVS"];
+
+  }
   @override
   Widget build(BuildContext context) {
     
@@ -31,8 +38,6 @@ class _ApvTypePageState extends State<ApvTypePage> {
           icon: const Icon(Icons.arrow_back_ios,
           size: 20,
           color: Colors.black,),
-
-
         ),
         centerTitle: true,
         title: Text("Vælg underbranche"), 
@@ -63,6 +68,18 @@ class _ApvTypePageState extends State<ApvTypePage> {
         },
       ),
     ),
+    bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ElevatedButton(
+          onPressed: selectedType != null ? () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
+          } : null, // Disable the button if no type is selected
+          child: Text('Næste'),
+        ),
+      ),
     );
         
   }
