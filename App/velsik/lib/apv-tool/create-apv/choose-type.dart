@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+<<<<<<< Updated upstream
 import 'package:velsik/home.dart';
 import 'package:velsik/services/apvservice.dart';
+=======
+import 'package:flutter/rendering.dart';
+import 'choose-questions.dart';
+>>>>>>> Stashed changes
 
 class ApvTypePage extends StatefulWidget {
   final String industry;
@@ -79,7 +84,11 @@ class _ApvTypePageState extends State<ApvTypePage> {
           onPressed: selectedType != null ? () {
             Navigator.push(
               context,
+<<<<<<< Updated upstream
               MaterialPageRoute(builder: (context) => const HomePage()),
+=======
+              MaterialPageRoute(builder: (context) => ApvQuestionPage()),
+>>>>>>> Stashed changes
             );
           } : null, // Disable the button if no type is selected
           child: const Text('Næste'),
