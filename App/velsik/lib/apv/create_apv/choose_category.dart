@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:velsik/apv-tool/create-apv/choose_type.dart';
+import 'package:velsik/apv/create_apv/choose_type.dart';
 import '/login.dart';
 
 class ApvIndustryPage extends StatefulWidget {
