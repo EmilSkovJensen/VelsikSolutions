@@ -22,7 +22,7 @@ class _ApvTypePageState extends State<ApvTypePage> {
   void initState() {
     super.initState();
 
-    apvService.getApvTypesByIndustry(widget.category).then((types) {
+    apvService.getApvTypesByCategory(widget.category).then((types) {
       if(types != null){
         setState(() {
           apvTypes = types;

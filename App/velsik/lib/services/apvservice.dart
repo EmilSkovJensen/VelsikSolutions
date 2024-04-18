@@ -55,12 +55,12 @@ class ApvService {
     }
   }
 
-  Future<List<String>?> getApvTypesByIndustry(String industry) async {
+  Future<List<String>?> getApvTypesByCategory(String category) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('token');
     if (token != null) {
       final response = await http.get(
-        Uri.parse('http://10.0.2.2:8000/apv/get_types?apv_category=$industry'),
+        Uri.parse('http://10.0.2.2:8000/apv/get_types?apv_category=$category'),
         headers: {
           'Content-Type': 'application/json', // Set the content type to JSON
           'Authorization': 'Bearer $token', // Include the token in the request headers
