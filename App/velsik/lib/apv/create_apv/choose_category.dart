@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:velsik/apv-tool/create-apv/choose-type.dart';
+import 'package:velsik/apv-tool/create-apv/choose_type.dart';
 import '/login.dart';
 
 class ApvIndustryPage extends StatefulWidget {
@@ -28,7 +28,7 @@ class _ApvIndustryPageState extends State<ApvIndustryPage> {
 
         ),
         centerTitle: true, 
-        title: Text("Vælg branche"), 
+        title: Text("Vælg kategori"), 
       ),
       body: Stack(
         children: [
@@ -43,7 +43,7 @@ class _ApvIndustryPageState extends State<ApvIndustryPage> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const ApvTypePage(industry: "Bygge og anlæg")),
+                      MaterialPageRoute(builder: (context) => const ApvTypePage(category: "Bygge og anlæg")),
                     );
                   },
                   child: Image.asset('assets/byggeoganlaeg.png'),

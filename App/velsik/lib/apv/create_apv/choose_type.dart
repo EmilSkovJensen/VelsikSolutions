@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:velsik/services/apvservice.dart';
-import 'package:velsik/apv-tool/create-apv/choose-questions.dart';
+import 'package:velsik/apv-tool/create-apv/choose_questions.dart';
 
 
 class ApvTypePage extends StatefulWidget {
-  final String industry;
+  final String category;
 
-  const ApvTypePage({super.key, required this.industry});
+  const ApvTypePage({super.key, required this.category});
 
   @override
   _ApvTypePageState createState() => _ApvTypePageState();
@@ -22,7 +22,7 @@ class _ApvTypePageState extends State<ApvTypePage> {
   void initState() {
     super.initState();
 
-    apvService.getApvTypesByIndustry(widget.industry).then((types) {
+    apvService.getApvTypesByIndustry(widget.category).then((types) {
       if(types != null){
         setState(() {
           apvTypes = types;
