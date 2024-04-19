@@ -7,7 +7,7 @@ import '../models/user.dart';
 
 class UserService {
 
-  Future<User?> getUserById() async {
+  Future<User> getUserById() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final int? userId = prefs.getInt('userId');
     if (userId != null) {
@@ -21,38 +21,49 @@ class UserService {
 
         return user;
       }else {
-        return null; //ERROR HANDLING
+        throw Exception(); //Error handling
       }
     }else {
-      return null; //ERROR HANDLING
+      throw Exception(); //Error handling
     }
   }
 
   Future<List<Department>?> getDepartmentsAndUsersByCompanyId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final int? userId = prefs.getInt('userId');
-    int? companyId;
+    final int? companyId = prefs.getInt('companyId');
+   
     List<Department> departments = [];
-    getUserById().then((user) {
-      if (user != null) {
-        companyId = user.companyId;
-      } 
-    });
-  
+
     if (userId != null) {
       final response = await http.get(
-        Uri.parse('http://10.0.2.2:8000//department/get_departments_and_users?company_id$companyId'),
+        Uri.parse('http://10.0.2.2:8000/department/get_departments_and_users?company_id=$companyId'),
       );
       if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        final String responseBody = utf8.decode(response.bodyBytes);
+        final Map<String, dynamic> responseData = jsonDecode(responseBody);
 
-        for(Map<String, dynamic> department in responseData['departments']){
+        for (Map<String, dynamic> department in responseData['departments']) {
           List<User> users = [];
-          for(Map<String, dynamic> user in responseData['departments']['users']){
-            users.add(User(user['user_id'], user['company_id'], user['department_id'], user['email'], user['password'], user['firstname'], user['lastname'], user['phone_number'], user['user_role']));
+          for (Map<String, dynamic> user in department['users']) {
+            users.add(User(
+              user['user_id'],
+              user['company_id'],
+              user['department_id'],
+              user['email'],
+              user['password'],
+              user['firstname'],
+              user['lastname'],
+              user['phone_number'],
+              user['user_role'],
+            ));
           }
 
-          departments.add(Department(department['department_id'], department['department_name'], users));
+          departments.add(Department(
+            department['department_id'],
+            department['department_name'],
+            users,
+          ));
         }
 
         return departments;

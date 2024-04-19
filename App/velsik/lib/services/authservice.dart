@@ -1,11 +1,14 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:velsik/models/user.dart';
+import 'package:velsik/services/userservice.dart';
 
 class AuthService {
   final SharedPreferences _prefs;
 
   AuthService(this._prefs);
+  UserService userService = UserService();
 
   Future<void> signIn(String email, String password) async {
     final response = await http.post(
@@ -35,6 +38,11 @@ class AuthService {
         // Store the token and user ID securely
         await _prefs.setString('token', token);
         await _prefs.setInt('userId', userId);
+        
+        final User user = await userService.getUserById();
+        await _prefs.setInt('companyId', user.companyId);
+        
+        
 
         // Save authentication state
         await _prefs.setBool('isLoggedIn', true);

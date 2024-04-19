@@ -20,6 +20,7 @@ class _ApvReceiversPageState extends State<ApvReceiversPage> {
   final UserService userService = UserService();
   final ApvService apvService = ApvService();
   List<Department> departments = []; 
+  List<Department> tempDepartments = []; 
   List<User> selectedUsers = []; 
 
   @override
@@ -29,7 +30,11 @@ class _ApvReceiversPageState extends State<ApvReceiversPage> {
     userService.getDepartmentsAndUsersByCompanyId().then((fetchedDepartments) {
       if(fetchedDepartments != null){
         setState(() {
-          departments = fetchedDepartments;
+          for(Department department in fetchedDepartments){
+            if(department.users.isNotEmpty){
+              departments.add(department);
+            }
+          }
         });
       } 
     });
@@ -66,7 +71,7 @@ class _ApvReceiversPageState extends State<ApvReceiversPage> {
             ),
             children: departments[index].users.map((user) {
               return Padding(
-          padding: EdgeInsets.only(left: 16.0),
+          padding: const EdgeInsets.only(left: 16.0),
               child: ListTile(
                 title: Text("${user.firstname} ${user.lastname}"),
                 leading: Checkbox(
