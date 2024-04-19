@@ -92,3 +92,10 @@ async def insert_apv(data: dict, user_id=Depends(auth_handler.auth_wrapper)):
 async def get_types(apv_category: str):
     types = apv_db.get_apv_types(apv_category)
     return {"types": types}
+
+
+@app.get("/department/get_departments_and_users")
+async def get_departments_and_users(company_id: int):
+    departments = user_db.get_departments_and_users(company_id)
+
+    return {"departments": departments}

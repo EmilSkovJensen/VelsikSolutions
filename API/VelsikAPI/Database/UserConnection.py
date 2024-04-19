@@ -1,4 +1,6 @@
 import psycopg2
+
+from Database.Models.Department import Department
 from Database.Models.User import User
 from Database.BCrypt import BCryptTool
 from configparser import ConfigParser
@@ -36,7 +38,7 @@ class UserConnection:
 
         try:
             with connection.cursor() as cursor:
-                cursor.execute("SELECT * FROM Users WHERE user_id = %s", (user_id, ))
+                cursor.execute("SELECT * FROM Users WHERE user_id = %s", (user_id,))
 
                 data = cursor.fetchone()
 
@@ -100,3 +102,63 @@ class UserConnection:
 
         except psycopg2.Error as e:
             print("Error executing SQL query:", e)
+
+    def get_departments(self):
+        connection = psycopg2.connect(self.connection_string)
+        if not connection:
+            print("Database connection not established.")
+            return None
+
+        departments = []
+
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT * FROM Department")
+
+                departments = []
+                data = cursor.fetchall()
+
+                for department in data:
+                    departments.append(Department(department[0], department[1], None))
+
+        except psycopg2.Error as e:
+            print("Error executing SQL query:", e)
+
+        return departments
+
+    def get_users_by_department(self, company_id, department_name):
+        connection = psycopg2.connect(self.connection_string)
+        if not connection:
+            print("Database connection not established.")
+            return None
+
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT * FROM Users WHERE company_id = %s AND department_id = (SELECT department_id FROM department WHERE department_name = %s)",
+                    (company_id, department_name))
+
+                users = []
+                data = cursor.fetchall()
+
+                for user in data:
+                    users.append(User(user_id=user[0],
+                                      company_id=user[1],
+                                      department_id=user[2],
+                                      email=user[3],
+                                      password=user[4],
+                                      firstname=user[5],
+                                      lastname=user[6],
+                                      phone_number=user[7],
+                                      user_role=user[8]))
+
+        except psycopg2.Error as e:
+            print("Error executing SQL query:", e)
+
+        return users
+
+    def get_departments_and_users(self, company_id):
+        departments = self.get_departments()
+
+        for department in departments:
+            department.users = self.get_users_by_department(company_id, department.name)
