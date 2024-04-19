@@ -25,47 +25,14 @@ class _ApvReceiversPageState extends State<ApvReceiversPage> {
   @override
   void initState() {
     super.initState();
-List<User> users = [
-    User(
-      1,
-      1,
-      1,
-      'user1@example.com',
-      'password1',
-      'John',
-      'Doe',
-      '123456781',
-      'Role',
-    ),
-    User(
-      2,
-      1,
-      1,
-      'user2@example.com',
-      'password2',
-      'Jane',
-      'Smith',
-      '123456782',
-      'Role',
-    ),
-
-    User(
-      3,
-      1,
-      2,
-      'user10@example.com',
-      'password10',
-      'Alice',
-      'Johnson',
-      '123456789',
-      'Role',
-    ),
-  ];
     
-    departments = [
-      Department(1, "Tømrer", users.where((user) => user.departmentId == 1).toList()),
-      Department(2, "Kontor", users.where((user) => user.departmentId == 2).toList()),
-    ];
+    userService.getDepartmentsAndUsersByCompanyId().then((fetchedDepartments) {
+      if(fetchedDepartments != null){
+        setState(() {
+          departments = fetchedDepartments;
+        });
+      } 
+    });
   }
 
   @override

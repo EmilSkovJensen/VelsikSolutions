@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:velsik/models/department.dart';
 
 import '../models/user.dart';
 
@@ -27,10 +28,11 @@ class UserService {
     }
   }
 
-  Future<Map<String, dynamic>?> getDepartmentsAndUsersByCompanyId(String companyId) async {
+  Future<List<Department>?> getDepartmentsAndUsersByCompanyId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final int? userId = prefs.getInt('userId');
     int? companyId;
+    List<Department> departments = [];
     getUserById().then((user) {
       if (user != null) {
         companyId = user.companyId;
@@ -43,7 +45,17 @@ class UserService {
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        return responseData['departments'];
+
+        for(Map<String, dynamic> department in responseData['departments']){
+          List<User> users = [];
+          for(Map<String, dynamic> user in responseData['departments']['users']){
+            users.add(User(user['user_id'], user['company_id'], user['department_id'], user['email'], user['password'], user['firstname'], user['lastname'], user['phone_number'], user['user_role']));
+          }
+
+          departments.add(Department(department['department_id'], department['department_name'], users));
+        }
+
+        return departments;
       }else {
         return null; //ERROR HANDLING
       }
