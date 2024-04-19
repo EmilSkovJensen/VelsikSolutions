@@ -19,8 +19,8 @@ class ApvReceiversPage extends StatefulWidget {
 class _ApvReceiversPageState extends State<ApvReceiversPage> {
   final UserService userService = UserService();
   final ApvService apvService = ApvService();
-  List<Department> departments = []; //departments
-  List<User> selectedUsers = []; //List selected departments
+  List<Department> departments = []; 
+  List<User> selectedUsers = []; 
 
   @override
   void initState() {
@@ -48,9 +48,9 @@ List<User> users = [
       '123456782',
       'Role',
     ),
-    // Add more users here up to 10
+
     User(
-      10,
+      3,
       1,
       2,
       'user10@example.com',
