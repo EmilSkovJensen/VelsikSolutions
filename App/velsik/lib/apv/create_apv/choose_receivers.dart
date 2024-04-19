@@ -98,7 +98,9 @@ List<User> users = [
               },
             ),
             children: departments[index].users.map((user) {
-              return ListTile(
+              return Padding(
+          padding: EdgeInsets.only(left: 16.0),
+              child: ListTile(
                 title: Text("${user.firstname} ${user.lastname}"),
                 leading: Checkbox(
                   value: selectedUsers.contains(user),
@@ -112,6 +114,7 @@ List<User> users = [
                     });
                   },
                 ),
+              ),
               );
             }).toList(),
           );
