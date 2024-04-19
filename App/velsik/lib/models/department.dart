@@ -1,8 +1,8 @@
 import 'user.dart';
 
 class Department {
-  int? departmentId;
-  String? departmentName;
+  int departmentId;
+  String departmentName;
   List<User>? users;
 
   Department(

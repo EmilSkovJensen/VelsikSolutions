@@ -1,34 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:velsik/models/question.dart';
+import 'package:velsik/models/department.dart';
 import 'package:velsik/services/apvservice.dart';
 import 'package:velsik/apv/create_apv/choose_questions.dart';
+import 'package:velsik/services/userservice.dart';
 
 
-class ApvTypePage extends StatefulWidget {
-  final String category;
+class ApvReceiversPage extends StatefulWidget {
+  final List<Question> questions;
 
-  const ApvTypePage({super.key, required this.category});
+  const ApvReceiversPage({super.key, required this.questions});
 
   @override
-  _ApvTypePageState createState() => _ApvTypePageState();
+  _ApvReceiversPageState createState() => _ApvReceiversPageState();
 }
 
 
-class _ApvTypePageState extends State<ApvTypePage> {
+class _ApvReceiversPageState extends State<ApvReceiversPage> {
+  final UserService userService = UserService();
   final ApvService apvService = ApvService();
-  List<String> apvTypes = [];
-  String? selectedType;
+  List<Department> departments = []; //departments
+  String? selectedType; //List selected departments
 
  @override
   void initState() {
     super.initState();
 
-    apvService.getApvTypesByCategory(widget.category).then((types) {
-      if(types != null){
-        setState(() {
-          apvTypes = types;
-        });
-      } 
-    });
+    //Retrieve list of departments which has a list of users
   }
 
   @override
@@ -46,17 +44,17 @@ class _ApvTypePageState extends State<ApvTypePage> {
           color: Colors.black,),
         ),
         centerTitle: true,
-        title: const Text("Vælg typen"), 
+        title: const Text("Vælg medarbejdere"), 
       ),
           body: Align(
             alignment: Alignment.center,
            child: ListView.builder(
-        itemCount: apvTypes.length,
+        itemCount: departments.length,
         itemBuilder: (context, index) {
-          final type = apvTypes[index];
+          final department = departments[index];
           return ListTile(
             leading: Radio<String>(
-              value: type,
+              value: department.departmentName,
               groupValue: selectedType,
               onChanged: (String? value) {
                 setState(() {
@@ -64,10 +62,10 @@ class _ApvTypePageState extends State<ApvTypePage> {
                 });
               },
             ),
-            title: Text(type),
+            title: Text(department.departmentName),
             onTap: () {
               setState(() {
-                selectedType = type;
+                selectedType = department.departmentName;
               });
             },
           );

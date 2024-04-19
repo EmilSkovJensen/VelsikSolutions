@@ -4,8 +4,8 @@ class Question {
   int? apvId;
   int? apvTypeId;
   int? placementNo;
-  String? questionTitle;
-  String? questionText;
+  String questionTitle;
+  String questionText;
 
   Question(
     this.questionId,

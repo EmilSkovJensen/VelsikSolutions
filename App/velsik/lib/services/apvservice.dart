@@ -7,7 +7,7 @@ import 'package:velsik/models/apv.dart';
 
 class ApvService {
 
-  Future<List<Question>?> getTemplateQuestionsByTypeName(String typeName) async {
+  Future<List<Question>?> getTemplateQuestionsByTypeName(String? typeName) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('token');
     if (token != null) {
@@ -15,7 +15,8 @@ class ApvService {
         Uri.parse('http://10.0.2.2:8000/apv/get_template_questions?apv_type=$typeName'),
       );
       if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        final String responseBody = utf8.decode(response.bodyBytes); // Decode response body using UTF-8 to be able to see Danish letters in application
+        final Map<String, dynamic> responseData = jsonDecode(responseBody);
         final List<Question> questions = [];
 
         for(final obj in responseData['questions']){

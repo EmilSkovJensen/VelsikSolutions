@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:velsik/services/apvservice.dart';
+import 'package:velsik/models/question.dart';
 
 class ApvQuestionPage extends StatefulWidget {
+  final String? type;
 
-  const ApvQuestionPage({super.key,});
+  const ApvQuestionPage({super.key, required this.type});
 
   @override
   _ApvQuestionPageState createState() => _ApvQuestionPageState();
@@ -10,19 +13,29 @@ class ApvQuestionPage extends StatefulWidget {
 
 
 class _ApvQuestionPageState extends State<ApvQuestionPage> {
-
-  List questions = [];
+  final ApvService apvService = ApvService();
+  List<Question> apvQuestions = [];
   
 
  @override
   void initState() {
     super.initState();
 
-    questions = ["are u gay", "why are yu geh?"];
-
+    apvService.getTemplateQuestionsByTypeName(widget.type).then((questions) {
+      if(questions != null){
+        setState(() {
+          apvQuestions = questions;
+        });
+      } 
+    });
   }
+
  @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final Color oddItemColor = colorScheme.primary.withOpacity(0.05);
+    final Color evenItemColor = colorScheme.primary.withOpacity(0.15);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -36,14 +49,23 @@ class _ApvQuestionPageState extends State<ApvQuestionPage> {
           color: Colors.black,),
         ),
         centerTitle: true,
-        title: Text("Vælg spørgsmål"), 
+        title: const Text("Vælg spørgsmål"), 
       ),
       body: ReorderableListView(
-        padding: EdgeInsets.symmetric(vertical: 8.0),
-        children: questions.map((question) {
+        buildDefaultDragHandles: true,
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        children: apvQuestions.asMap().entries.map((entry) {
+          final int index = entry.key;
+          final Question question = entry.value;
           return ListTile(
-            key: Key(question), // Each list tile needs a unique key
-            title: Text(question),
+            key: Key(question.questionId.toString()), // Each list tile needs a unique key
+            leading: Text(
+              (index + 1).toString(),
+              style: const TextStyle(fontSize: 16), // Adjust the font size as needed
+            ), // Placement number
+            title: Text(question.questionTitle),
+            tileColor: entry.key.isOdd ? oddItemColor : evenItemColor,
+            trailing: const Icon(Icons.drag_handle),
           );
         }).toList(),
         onReorder: (oldIndex, newIndex) {
@@ -51,10 +73,27 @@ class _ApvQuestionPageState extends State<ApvQuestionPage> {
             if (newIndex > oldIndex) {
               newIndex -= 1; // Adjust index after removing the element
             }
-            final question = questions.removeAt(oldIndex);
-            questions.insert(newIndex, question);
+            final Question question = apvQuestions.removeAt(oldIndex);
+            apvQuestions.insert(newIndex, question);
+            // Update placement numbers
+            for (int i = 0; i < apvQuestions.length; i++) {
+              apvQuestions[i].placementNo = i + 1;
+            }
           });
         },
+
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ApvQuestionPage(type: 'type')),
+            );
+          },
+          child: const Text('Næste'),
+        ),
       ),
     );
   }
