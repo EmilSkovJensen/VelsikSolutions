@@ -22,14 +22,14 @@ POST http://127.0.0.1:8000/user/insert
 Content-Type: application/json
 
 {
-  "company_id": null,
-  "department_id": null,
-  "email": "test@test.com",
+  "company_id": 1,
+  "department_id": 1,
+  "email": "Bruger2@test.com",
   "password": "123",
-  "firstname": "Emil",
-  "lastname": "Skov",
+  "firstname": "Jens",
+  "lastname": "Erik",
   "phone_number": "1234567890",
-  "user_role": "admin"
+  "user_role": "user"
 }
 
 ### Get a user by ID
@@ -45,6 +45,11 @@ Accept: application/json
 ### Get types by category name
 
 GET http://127.0.0.1:8000/apv/get_types?apv_category=Bygge og anlæg
+Accept: application/json
+
+### Get departments and users by company_id
+
+GET http://127.0.0.1:8000/department/get_departments_and_users?company_id=1
 Accept: application/json
 
 ###

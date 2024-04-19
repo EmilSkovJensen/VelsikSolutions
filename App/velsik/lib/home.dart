@@ -26,9 +26,9 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     userService.getUserById().then((user) {
-      if (user != null && user['user']['user_role'] == 'superuser') {
+      if (user != null && user.userRole == 'superuser') {
         setState(() {
-          _userId = user['user']['user_id'];
+          _userId = user.userId;
           _isSuperUser = true;
           _isLoading = false;
         });

@@ -161,4 +161,6 @@ class UserConnection:
         departments = self.get_departments()
 
         for department in departments:
-            department.users = self.get_users_by_department(company_id, department.name)
+            department.users = self.get_users_by_department(company_id, department.department_name)
+
+        return departments
