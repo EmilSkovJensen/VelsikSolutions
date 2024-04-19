@@ -85,15 +85,8 @@ List<User> users = [
                 setState(() {
                   if (value ?? false) {
                     for(var i = 0; i < departments[index].users.length; i++){
-                      if(selectedUsers.isNotEmpty){
-                        if(selectedUsers[i].userId != departments[index].users[i].userId){
-                        selectedUsers.add(departments[index].users[i]);
-                      }
-                      } else {
-                        selectedUsers.add(departments[index].users[i]);
-                      }
-                      
-                      
+                        selectedUsers.remove(departments[index].users[i]);
+                        selectedUsers.add(departments[index].users[i]); 
                     }
                     
                   } else {
