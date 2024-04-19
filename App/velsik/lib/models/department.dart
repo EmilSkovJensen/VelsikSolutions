@@ -3,7 +3,7 @@ import 'user.dart';
 class Department {
   int departmentId;
   String departmentName;
-  List<User>? users;
+  List<User> users;
 
   Department(
     this.departmentId,

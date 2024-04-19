@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:velsik/services/apvservice.dart';
 import 'package:velsik/models/question.dart';
+import 'package:velsik/apv/create_apv/choose_receivers.dart';
 
 class ApvQuestionPage extends StatefulWidget {
   final String? type;
@@ -89,7 +90,7 @@ class _ApvQuestionPageState extends State<ApvQuestionPage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ApvQuestionPage(type: 'type')),
+              MaterialPageRoute(builder: (context) => ApvReceiversPage(questions: apvQuestions)),
             );
           },
           child: const Text('Næste'),

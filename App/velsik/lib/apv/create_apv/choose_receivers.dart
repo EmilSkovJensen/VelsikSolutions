@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:velsik/models/question.dart';
 import 'package:velsik/models/department.dart';
+import 'package:velsik/models/user.dart';
 import 'package:velsik/services/apvservice.dart';
-import 'package:velsik/apv/create_apv/choose_questions.dart';
 import 'package:velsik/services/userservice.dart';
 
 
@@ -20,71 +20,110 @@ class _ApvReceiversPageState extends State<ApvReceiversPage> {
   final UserService userService = UserService();
   final ApvService apvService = ApvService();
   List<Department> departments = []; //departments
-  String? selectedType; //List selected departments
+  List<User> selectedUsers = []; //List selected departments
 
- @override
+  @override
   void initState() {
     super.initState();
-
-    //Retrieve list of departments which has a list of users
+List<User> users = [
+    User(
+      1,
+      1,
+      1,
+      'user1@example.com',
+      'password1',
+      'John',
+      'Doe',
+      '123456781',
+      'Role',
+    ),
+    User(
+      2,
+      1,
+      1,
+      'user2@example.com',
+      'password2',
+      'Jane',
+      'Smith',
+      '123456782',
+      'Role',
+    ),
+    // Add more users here up to 10
+    User(
+      10,
+      1,
+      2,
+      'user10@example.com',
+      'password10',
+      'Alice',
+      'Johnson',
+      '123456789',
+      'Role',
+    ),
+  ];
+    
+    departments = [
+      Department(1, "Tømrer", users.where((user) => user.departmentId == 1).toList()),
+      Department(2, "Kontor", users.where((user) => user.departmentId == 2).toList()),
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
-        return Scaffold(
-          appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.arrow_back_ios,
-          size: 20,
-          color: Colors.black,),
-        ),
-        centerTitle: true,
-        title: const Text("Vælg medarbejdere"), 
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Vælg modtagere'),
       ),
-          body: Align(
-            alignment: Alignment.center,
-           child: ListView.builder(
+      body: ListView.builder(
         itemCount: departments.length,
         itemBuilder: (context, index) {
-          final department = departments[index];
-          return ListTile(
-            leading: Radio<String>(
-              value: department.departmentName,
-              groupValue: selectedType,
-              onChanged: (String? value) {
+          return ExpansionTile(
+            title: Text(departments[index].departmentName),
+            leading: Checkbox(
+              value: departments[index].users.every((user) => selectedUsers.contains(user)),
+              onChanged: (bool? value) {
                 setState(() {
-                  selectedType = value;
+                  if (value ?? false) {
+                    for(var i = 0; i < departments[index].users.length; i++){
+                      if(selectedUsers.isNotEmpty){
+                        if(selectedUsers[i].userId != departments[index].users[i].userId){
+                        selectedUsers.add(departments[index].users[i]);
+                      }
+                      } else {
+                        selectedUsers.add(departments[index].users[i]);
+                      }
+                      
+                      
+                    }
+                    
+                  } else {
+                    for(var i = 0; i < departments[index].users.length; i++){
+                      selectedUsers.remove(departments[index].users[i]);
+                    }
+                  }
                 });
               },
             ),
-            title: Text(department.departmentName),
-            onTap: () {
-              setState(() {
-                selectedType = department.departmentName;
-              });
-            },
+            children: departments[index].users.map((user) {
+              return ListTile(
+                title: Text("${user.firstname} ${user.lastname}"),
+                leading: Checkbox(
+                  value: selectedUsers.contains(user),
+                  onChanged: (bool? value) {
+                    setState(() {
+                      if (value ?? false) {
+                        selectedUsers.add(user);
+                      } else {
+                        selectedUsers.remove(user);
+                      }
+                    });
+                  },
+                ),
+              );
+            }).toList(),
           );
         },
       ),
-    ),
-    bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ElevatedButton(
-          onPressed: selectedType != null ? () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ApvQuestionPage(type: selectedType)),
-            );
-          } : null, // Disable the button if no type is selected
-          child: const Text('Næste'),
-        ),
-      ),
     );
-        
   }
 }
