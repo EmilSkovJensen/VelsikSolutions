@@ -51,11 +51,7 @@ class _HomePageState extends State<HomePage> {
       );
     } else {
       if (!_isSuperUser) {
-        // If the user is not a super user, display an empty page
-        Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const HomeUserPage()),
-                      );
+        return const HomeUserPage();
       }
 
       return Scaffold(

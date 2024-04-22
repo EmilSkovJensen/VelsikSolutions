@@ -30,6 +30,26 @@ class APVConnection:
 
         return questions
 
+    def get_questions(self, apv_id):
+        connection = psycopg2.connect(self.connection_string)
+        if not connection:
+            print("Database connection not established.")
+            return None
+
+        questions = []
+
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT * FROM apv_question WHERE apv_id = %s",
+                    (apv_id,))
+
+                questions = cursor.fetchall()
+        except psycopg2.Error as e:
+            print("Error executing SQL query:", e)
+
+        return questions
+
     def get_apv_types(self, category_name):
         connection = psycopg2.connect(self.connection_string)
         if not connection:
@@ -68,7 +88,7 @@ class APVConnection:
             with connection.cursor() as cursor:
                 for user in users:
                     cursor.execute(
-                        "INSERT INTO user_apv_relation(user_id, apv_id) VALUES (%s, %s)", (user['userId'], apv_id))
+                        "INSERT INTO user_apv_relation(user_id, apv_id, is_completed) VALUES (%s, %s, %s)", (user['userId'], apv_id, False))
 
         except psycopg2.Error as e:
             raise ValueError("Error executing SQL query:", e)
@@ -87,7 +107,6 @@ class APVConnection:
                 self.insert_apv_questions(connection=connection, apv_id=apv_id, questions=apv.questions)
 
                 self.insert_user_apv_relations(connection=connection, apv_id=apv_id, users=apv.users)
-                print('GAYYYYYYYYYYYYYYYYYYYYY13333333')
 
             # Commit the transaction
             connection.commit()
@@ -96,3 +115,33 @@ class APVConnection:
             # Rollback the transaction in case of error
             connection.rollback()
             raise e
+
+    def get_apvs_by_user_id(self, user_id):
+        connection = psycopg2.connect(self.connection_string)
+        if not connection:
+            print("Database connection not established.")
+            return None
+
+        apvs = []
+
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """SELECT apv.* FROM apv
+                             INNER JOIN user_apv_relation aur ON aur.apv_id = apv.apv_id
+                             WHERE aur.user_id = %s 
+                               AND apv.start_date <= CURRENT_DATE 
+                               AND apv.end_date >= CURRENT_DATE
+                               AND aur.is_completed = false""",
+                    (user_id,))
+
+                allapvs = cursor.fetchall()
+
+                for obj in allapvs:
+                    apv = APV(obj[0], obj[1], obj[2], obj[3], None, None)
+                    apvs.append(apv)
+
+        except psycopg2.Error as e:
+            print("Error executing SQL query:", e)
+
+        return apvs

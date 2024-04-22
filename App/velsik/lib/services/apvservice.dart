@@ -88,6 +88,36 @@ class ApvService {
     }
   }
 
+  Future<List<Apv>?> getApvsByUserId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    final int? userId = prefs.getInt('userId');
+    if (token != null) {
+      final response = await http.get(
+        Uri.parse('http://10.0.2.2:8000/apv/get_remaining_apvs?user_id=$userId'),
+        headers: {
+          'Content-Type': 'application/json', // Set the content type to JSON
+          'Authorization': 'Bearer $token', // Include the token in the request headers
+        },
+      );
+      if (response.statusCode == 200) {
+        final String responseBody = utf8.decode(response.bodyBytes); // Decode response body using UTF-8 to be able to see Danish letters in application
+        final Map<String, dynamic> responseData = jsonDecode(responseBody);
+        final List<Apv> apvs = [];
+
+        for(final obj in responseData['apvs']){
+          apvs.add(Apv(obj['apv_id'], obj['company_id'], DateTime.parse(obj['start_date']), DateTime.parse(obj['end_date']), null, null));
+        }
+
+        return apvs;
+      }else {
+        return null; //ERROR HANDLING
+      }
+    }else {
+      return null; //ERROR HANDLING
+    }
+  }
+
 
 
 

@@ -84,6 +84,12 @@ async def get_template_questions(apv_type: str):
     return {"questions": questions}
 
 
+@app.get("/apv/questions")
+async def get_questions(apv_id: str):
+    questions = apv_db.get_questions(apv_id)
+    return {"questions": questions}
+
+
 @app.get("/apv/get_types")
 async def get_types(apv_category: str):
     types = apv_db.get_apv_types(apv_category)
@@ -114,3 +120,9 @@ async def insert_apv(data: dict):
         return {"message": "APV created successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal Server Error: {e}")
+
+
+@app.get("/apv/get_remaining_apvs")
+async def get_remaining_apvs(user_id: int):
+    apvs = apv_db.get_apvs_by_user_id(user_id)
+    return {"apvs": apvs}

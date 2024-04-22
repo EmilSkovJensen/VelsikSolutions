@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:velsik/models/apv.dart';
+import 'package:velsik/services/apvservice.dart';
 import 'services/authservice.dart';
 import 'login.dart';
-import 'services/userservice.dart';
+import 'package:intl/intl.dart'; 
 
 class HomeUserPage extends StatefulWidget {
   const HomeUserPage({super.key});
@@ -12,48 +15,77 @@ class HomeUserPage extends StatefulWidget {
 }
 
 class _HomeUserPageState extends State<HomeUserPage> {
-  final UserService userService = UserService();
-
+  final ApvService apvService = ApvService();
+  List<Apv>? apvs = [];
   
   @override
   void initState() {
     super.initState();
+
+    apvService.getApvsByUserId().then((allApvs) => {
+      setState(() {
+          if(allApvs != null){
+            apvs = allApvs;
+          } 
+      })
+    });
   }
   
-  @override
+ @override
   Widget build(BuildContext context) {
-        // If the user is not a super user, display an empty page
-        return Scaffold(
-            appBar: AppBar(
-              elevation: 0,
-              backgroundColor: Colors.white,
-              automaticallyImplyLeading: false,
-            ),
-            body: Stack( children:[
-              Positioned(
-                bottom: 16, 
-                left: 0,
-                right: 0,
-                child: Center(
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      final SharedPreferences prefs = await SharedPreferences.getInstance();
-                      final AuthService authService = AuthService(prefs);
-                      await authService.signOut();
-
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const LoginPage()),
-                      );
-                    },
-                    child: const Text('Logout'),
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text('Mine opgaver'),
+        titleTextStyle: const TextStyle(fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold),
+        elevation: 0,
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+      ),
+      body: apvs != null && apvs!.isEmpty
+          ? const Center(
+              child: CircularProgressIndicator(), // Placeholder for loading indicator
+            )
+          : ListView.builder(
+              itemCount: apvs!.length,
+              itemBuilder: (context, index) {
+                final apv = apvs![index];
+                return GestureDetector(
+                  onTap: () {
+                    // Handle tap event here
+                    // You can navigate to another screen or perform any other action
+                    print('Card tapped!');
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Card(
+                      child: ListTile(
+                        title: Text('APV Nummer: ${apv.apvId}'),
+                        subtitle: Text('Start dato: ${DateFormat('dd-MM-yyyy').format(apv.startDate!).toString()}, Slut dato: ${DateFormat('dd-MM-yyyy').format(apv.endDate!).toString()}'),
+                        // Add more details as needed
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ])
-          ); 
-      
-    
+                );
+              },
+            ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ElevatedButton(
+          onPressed: () async {
+            final SharedPreferences prefs = await SharedPreferences.getInstance();
+            final AuthService authService = AuthService(prefs);
+            await authService.signOut();
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginPage()),
+            );
+          },
+          child: const Text('Log ud'),
+        ),
+      ),
+    );
   }
 }
 
