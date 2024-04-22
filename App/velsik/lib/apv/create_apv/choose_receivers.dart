@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:velsik/apv/create_apv/finalize_apv.dart';
 import 'package:velsik/models/question.dart';
 import 'package:velsik/models/department.dart';
 import 'package:velsik/models/user.dart';
@@ -91,6 +92,18 @@ class _ApvReceiversPageState extends State<ApvReceiversPage> {
             }).toList(),
           );
         },
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ElevatedButton(
+          onPressed: selectedUsers.isNotEmpty ? () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => FinalizeApvPage(questions: widget.questions, selectedUsers: selectedUsers)),
+            );
+          } : null, // Disable the button if no users is selected
+          child: const Text('Næste'),
+        ),
       ),
     );
   }
