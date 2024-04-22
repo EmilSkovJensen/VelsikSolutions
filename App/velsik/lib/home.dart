@@ -4,6 +4,7 @@ import 'services/authservice.dart';
 import 'login.dart';
 import 'services/userservice.dart';
 import 'apv/apv_page.dart';
+import 'home_user.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -51,35 +52,10 @@ class _HomePageState extends State<HomePage> {
     } else {
       if (!_isSuperUser) {
         // If the user is not a super user, display an empty page
-        return Scaffold(
-            appBar: AppBar(
-              elevation: 0,
-              backgroundColor: Colors.white,
-              automaticallyImplyLeading: false,
-            ),
-            body: Stack( children:[
-              Positioned(
-                bottom: 16, 
-                left: 0,
-                right: 0,
-                child: Center(
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      final SharedPreferences prefs = await SharedPreferences.getInstance();
-                      final AuthService authService = AuthService(prefs);
-                      await authService.signOut();
-
-                      Navigator.push(
+        Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const LoginPage()),
+                        MaterialPageRoute(builder: (context) => const HomeUserPage()),
                       );
-                    },
-                    child: const Text('Logout'),
-                  ),
-                ),
-              ),
-            ])
-          ); 
       }
 
       return Scaffold(
