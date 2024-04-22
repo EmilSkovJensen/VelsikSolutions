@@ -23,11 +23,11 @@ Content-Type: application/json
 
 {
   "company_id": 1,
-  "department_id": 1,
-  "email": "Bruger2@test.com",
-  "password": "123",
-  "firstname": "Jens",
-  "lastname": "Erik",
+  "department_id": 3,
+  "email": "Bruger2sd@test.com",
+  "password": "1232",
+  "firstname": "Knud",
+  "lastname": "Larsen",
   "phone_number": "1234567890",
   "user_role": "user"
 }

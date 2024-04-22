@@ -1,7 +1,7 @@
 class User {
   int userId;
   int companyId;
-  int departmentId;
+  int? departmentId;
   String email;
   String password;
   String firstname;
