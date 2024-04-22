@@ -20,4 +20,19 @@ class User {
     this.phoneNumber,
     this.userRole,
   );
+
+  // Convert User object to a JSON-encodable map
+  Map<String, dynamic> toJson() {
+    return {
+      'userId': userId,
+      'companyId': companyId,
+      'departmentId': departmentId,
+      'email': email,
+      'password': password,
+      'firstname': firstname,
+      'lastname': lastname,
+      'phoneNumber': phoneNumber,
+      'userRole': userRole,
+    };
+  }
 }

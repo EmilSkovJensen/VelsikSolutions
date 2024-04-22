@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:velsik/home.dart';
 import 'package:velsik/models/apv.dart';
 import 'package:velsik/services/apvservice.dart';
 import 'package:velsik/models/question.dart';
@@ -81,6 +82,20 @@ class _FinalizeApvPageState extends State<FinalizeApvPage> {
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ElevatedButton(
+          onPressed: finalApv.startDate != null && finalApv.endDate != null ? () async {
+            if (await apvService.insertApv(finalApv)){
+              Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const HomePage()),
+              );
+            }  
+          } : null, // Disable the button if no type is selected
+          child: const Text('Send'),
+        ),
       ),
     );
   }

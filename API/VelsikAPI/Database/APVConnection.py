@@ -56,8 +56,8 @@ class APVConnection:
             with connection.cursor() as cursor:
                 for question in questions:
                     cursor.execute(
-                        "INSERT INTO apv_question(apv_id, placement_no, question_title, question_text) VALUES (%s, %s, %s, %s)",
-                        (apv_id, question["placement_no"], question["question_title"], question["question_text"]))
+                        "INSERT INTO apv_question(apv_id, question_title, question_text) VALUES (%s, %s, %s)",
+                        (apv_id, question["questionTitle"], question["questionText"]))
 
         except psycopg2.Error as e:
             raise ValueError("Error executing SQL query:", e)
@@ -68,8 +68,7 @@ class APVConnection:
             with connection.cursor() as cursor:
                 for user in users:
                     cursor.execute(
-                        "INSERT INTO user_apv_relation(apv_id, user_id) VALUES (%s, %s)",
-                        (apv_id, user[0]))
+                        "INSERT INTO user_apv_relation(user_id, apv_id) VALUES (%s, %s)", (user['userId'], apv_id))
 
         except psycopg2.Error as e:
             raise ValueError("Error executing SQL query:", e)
@@ -79,14 +78,16 @@ class APVConnection:
         try:
             with connection.cursor() as cursor:
                 cursor.execute("""
-                            INSERT INTO apv (apv_id, company_id, start_date, end_date)
-                            VALUES (%s, %s, %s, %s) RETURNING apv_id
-                        """, (apv.apv_id, apv.company_id, apv.start_date, apv.end_date))
+                            INSERT INTO apv (company_id, start_date, end_date)
+                            VALUES (%s, %s, %s) RETURNING apv_id
+                        """, (apv.company_id, apv.start_date, apv.end_date))
 
                 apv_id = cursor.fetchone()[0]
 
-                self.insert_apv_questions(apv_id, apv.questions)
-                self.insert_user_apv_relations(apv_id, apv.users)
+                self.insert_apv_questions(connection=connection, apv_id=apv_id, questions=apv.questions)
+
+                self.insert_user_apv_relations(connection=connection, apv_id=apv_id, users=apv.users)
+                print('GAYYYYYYYYYYYYYYYYYYYYY13333333')
 
             # Commit the transaction
             connection.commit()
@@ -94,4 +95,4 @@ class APVConnection:
         except psycopg2.Error as e:
             # Rollback the transaction in case of error
             connection.rollback()
-            print("Error inserting user:", e)
+            raise e

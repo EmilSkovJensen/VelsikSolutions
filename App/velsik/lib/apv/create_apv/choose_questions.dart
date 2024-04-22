@@ -76,10 +76,6 @@ class _ApvQuestionPageState extends State<ApvQuestionPage> {
             }
             final Question question = apvQuestions.removeAt(oldIndex);
             apvQuestions.insert(newIndex, question);
-            // Update placement numbers
-            for (int i = 0; i < apvQuestions.length; i++) {
-              apvQuestions[i].placementNo = i + 1;
-            }
           });
         },
 
