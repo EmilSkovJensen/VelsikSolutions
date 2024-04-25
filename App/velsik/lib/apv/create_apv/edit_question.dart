@@ -36,7 +36,7 @@ class _EditQuestionPageState extends State<EditQuestionPage> {
         centerTitle: true, 
         title: const Text("Rediger spørgsmål", style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.w900)), 
       ),
-      body: Stack(
+        body: Stack(
   children: [
     Positioned.fill(
       child: Container(
@@ -57,7 +57,7 @@ class _EditQuestionPageState extends State<EditQuestionPage> {
               ),
             ),
             Positioned(
-              top: 400,
+              top: 320,
               left: 20,
               right: 20,
               child: Column(
@@ -70,7 +70,9 @@ class _EditQuestionPageState extends State<EditQuestionPage> {
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (value) {
-                      widget.question.questionTitle = value;
+                      setState(() {
+                        widget.question.questionTitle = value;
+                      });
                     },
                   ),
                   const SizedBox(height: 10),
@@ -82,10 +84,22 @@ class _EditQuestionPageState extends State<EditQuestionPage> {
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (value) {
-                      widget.question.questionText = value;
+                      setState(() {
+                        widget.question.questionText = value;
+                      });
                     },
                   ),
                 ],
+              ),
+            ),
+            Positioned(
+              bottom: 20,
+              left: 20,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context, widget.question);
+                },
+                child: Text('Gem'),
               ),
             ),
           ],
