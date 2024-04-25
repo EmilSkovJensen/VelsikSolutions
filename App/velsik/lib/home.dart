@@ -55,17 +55,22 @@ class _HomePageState extends State<HomePage> {
       }
 
       return Scaffold(
+        backgroundColor: const Color(0xFF2596BE),
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Colors.white,
+          backgroundColor: const Color(0xFF2596BE),
           automaticallyImplyLeading: false,
-          centerTitle: true, 
-        title: Text("Unikabyg A/S"), 
+          centerTitle: true,
+          toolbarHeight: 100, 
+        title: const Padding(
+          padding: EdgeInsets.only(top: 20),
+          child: Center(child: Text("Unikabyg A/S", style: TextStyle(fontSize: 50, color: Colors.white, fontWeight: FontWeight.w900))),
+        ), 
         ),
         body: Stack(
           children: [
             Positioned(
-              top: 20,
+              top: 0,
               left: 0, 
               right: 0, 
               child: Padding(
@@ -84,7 +89,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Positioned(
-              top: 120,
+              top: 100,
               left: 0, 
               right: 0, 
               child: Padding(
@@ -103,7 +108,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Positioned(
-              top: 220, 
+              top: 200, 
               left: 0, 
               right: 0, 
               child: Padding(
@@ -122,7 +127,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Positioned(
-              top: 320, 
+              top: 300, 
               left: 0, 
               right: 0, 
               child: Padding(
@@ -142,21 +147,24 @@ class _HomePageState extends State<HomePage> {
             ),
             Positioned(
               bottom: 16, 
-              left: 0,
-              right: 0,
-              child: Center(
-                child: ElevatedButton(
-                  onPressed: () async {
-                    final SharedPreferences prefs = await SharedPreferences.getInstance();
-                    final AuthService authService = AuthService(prefs);
-                    await authService.signOut();
+              left: 0, 
+              right: 0, 
+              child: Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: Center(
+                  child: GestureDetector(
+                    onTap: () async {
+                      final SharedPreferences prefs = await SharedPreferences.getInstance();
+                      final AuthService authService = AuthService(prefs);
+                      await authService.signOut();
 
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const LoginPage()),
-                    );
-                  },
-                  child: const Text('Logout'),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const LoginPage()),
+                      );
+                    },
+                    child: Image.asset('assets/log-ud.png'),
+                  ),
                 ),
               ),
             ),

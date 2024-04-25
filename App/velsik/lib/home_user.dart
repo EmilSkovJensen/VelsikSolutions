@@ -34,13 +34,17 @@ class _HomeUserPageState extends State<HomeUserPage> {
  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF2596BE),
       appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Mine opgaver'),
-        titleTextStyle: const TextStyle(fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold),
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF2596BE),
         automaticallyImplyLeading: false,
+        centerTitle: true,
+        toolbarHeight: 100, 
+        title: const Padding(
+        padding: EdgeInsets.only(top: 20),
+        child: Center(child: Text("Unikabyg A/S", style: TextStyle(fontSize: 50, color: Colors.white, fontWeight: FontWeight.w900))),
+      ), 
       ),
       body: apvs != null && apvs!.isEmpty
           ? const Center(
