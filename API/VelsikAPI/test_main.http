@@ -57,4 +57,9 @@ Accept: application/json
 GET http://127.0.0.1:8000/apv/get_remaining_apvs?user_id=1
 Accept: application/json
 
+### Get questions by apv_id
+
+GET http://127.0.0.1:8000/apv/get_questions?apv_id=24
+Accept: application/json
+
 ###

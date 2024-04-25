@@ -84,7 +84,7 @@ async def get_template_questions(apv_type: str):
     return {"questions": questions}
 
 
-@app.get("/apv/questions")
+@app.get("/apv/get_questions")
 async def get_questions(apv_id: str):
     questions = apv_db.get_questions(apv_id)
     return {"questions": questions}

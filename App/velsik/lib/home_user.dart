@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:velsik/apv/response_page.dart';
 import 'package:velsik/models/apv.dart';
 import 'package:velsik/services/apvservice.dart';
 import 'services/authservice.dart';
@@ -56,9 +57,12 @@ class _HomeUserPageState extends State<HomeUserPage> {
                 final apv = apvs![index];
                 return GestureDetector(
                   onTap: () {
-                    // Handle tap event here
-                    // You can navigate to another screen or perform any other action
-                    print('Card tapped!');
+                    Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ResponsePage(apv: apv),
+                    ),
+                  );
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(20),
@@ -66,7 +70,6 @@ class _HomeUserPageState extends State<HomeUserPage> {
                       child: ListTile(
                         title: Text('APV Nummer: ${apv.apvId}'),
                         subtitle: Text('Start dato: ${DateFormat('dd-MM-yyyy').format(apv.startDate!).toString()}, Slut dato: ${DateFormat('dd-MM-yyyy').format(apv.endDate!).toString()}'),
-                        // Add more details as needed
                       ),
                     ),
                   ),
