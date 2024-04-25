@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:velsik/apv/create_apv/edit_question.dart';
 import 'package:velsik/services/apvservice.dart';
 import 'package:velsik/models/question.dart';
 import 'package:velsik/apv/create_apv/choose_receivers.dart';
@@ -91,8 +92,23 @@ Widget build(BuildContext context) {
                         fontWeight: FontWeight.w600),
                       ),
               tileColor: entry.key.isOdd ? oddItemColor : evenItemColor,
-              trailing: const Icon(Icons.drag_handle, color: Colors.white),
-            );
+             trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => EditQuestionPage(question: question)),
+              );
+            },
+            child: Icon(Icons.edit, color: Colors.white),
+          ),
+          const SizedBox(width: 8), // Adjust the spacing as needed
+          const Icon(Icons.drag_handle, color: Colors.white),
+        ],
+      ), 
+              );
           }).toList(),
           onReorder: (oldIndex, newIndex) {
             setState(() {
