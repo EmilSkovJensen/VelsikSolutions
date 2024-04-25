@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../services/authservice.dart';
 import '../login.dart';
 import 'create_apv/choose_category.dart';
 
@@ -17,22 +15,23 @@ class _ApvPageState extends State<ApvPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF2596BE),
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF2596BE),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
           icon: const Icon(Icons.arrow_back_ios,
           size: 20,
-          color: Colors.black,),
+          color: Colors.white,),
           
 
 
         ),
         centerTitle: true, 
-        title: const Text("APV Værktøj"), 
+        title: const Text("APV-Værktøj", style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.w900)), 
       ),
       body: Stack(
         children: [
@@ -90,26 +89,6 @@ class _ApvPageState extends State<ApvPage> {
                   },
                   child: Image.asset('assets/tidligere-apv.png'),
                 ),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 16, 
-            left: 0,
-            right: 0,
-            child: Center(
-              child: ElevatedButton(
-                onPressed: () async {
-                  final SharedPreferences prefs = await SharedPreferences.getInstance();
-                  final AuthService authService = AuthService(prefs);
-                  await authService.signOut();
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
-                  );
-                },
-                child: const Text('Logout'),
               ),
             ),
           ),

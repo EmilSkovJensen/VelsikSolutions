@@ -14,21 +14,23 @@ class _ApvIndustryPageState extends State<ApvIndustryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF2596BE),
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF2596BE),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
           icon: const Icon(Icons.arrow_back_ios,
           size: 20,
-          color: Colors.black,),
+          color: Colors.white,),
+          
 
 
         ),
         centerTitle: true, 
-        title: Text("Vælg kategori"), 
+        title: const Text("Vælg kategori", style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.w900)), 
       ),
       body: Stack(
         children: [

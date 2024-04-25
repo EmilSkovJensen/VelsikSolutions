@@ -3,6 +3,7 @@ import 'package:velsik/services/apvservice.dart';
 import 'package:velsik/apv/create_apv/choose_questions.dart';
 
 
+
 class ApvTypePage extends StatefulWidget {
   final String category;
 
@@ -32,61 +33,93 @@ class _ApvTypePageState extends State<ApvTypePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-        return Scaffold(
-          appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.arrow_back_ios,
-          size: 20,
-          color: Colors.black,),
-        ),
-        centerTitle: true,
-        title: const Text("Vælg typen"), 
-      ),
-          body: Align(
-            alignment: Alignment.center,
-           child: ListView.builder(
-        itemCount: apvTypes.length,
-        itemBuilder: (context, index) {
-          final type = apvTypes[index];
-          return ListTile(
-            leading: Radio<String>(
-              value: type,
-              groupValue: selectedType,
-              onChanged: (String? value) {
-                setState(() {
-                  selectedType = value;
-                });
-              },
-            ),
-            title: Text(type),
-            onTap: () {
-              setState(() {
-                selectedType = type;
-              });
-            },
-          );
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: const Color(0xFF2596BE),
+    appBar: AppBar(
+      elevation: 0,
+      backgroundColor: const Color(0xFF2596BE),
+      leading: IconButton(
+        onPressed: () {
+          Navigator.pop(context);
         },
+        icon: const Icon(
+          Icons.arrow_back_ios,
+          size: 20,
+          color: Colors.white,
+        ),
+      ),
+      centerTitle: true,
+      title: const Text(
+        "Vælg typen",
+        style: TextStyle(
+            fontSize: 30,
+            color: Colors.white,
+            fontWeight: FontWeight.w900),
       ),
     ),
-    bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ElevatedButton(
-          onPressed: selectedType != null ? () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ApvQuestionPage(type: selectedType)),
+    body: Stack(
+      children: [
+        ListView.builder(
+          itemCount: apvTypes.length,
+          itemBuilder: (context, index) {
+            final type = apvTypes[index];
+            return ListTile(
+              leading: Radio<String>(
+                fillColor: MaterialStateProperty.resolveWith<Color>(
+                  (Set<MaterialState> states) {
+                    if (states.contains(MaterialState.selected)) {
+                      return Colors.white; // Change selected color
+                    }
+                    return Colors.white; // Change unselected color
+                  },
+                ),
+                value: type,
+                groupValue: selectedType,
+                onChanged: (String? value) {
+                  setState(() {
+                    selectedType = value;
+                  });
+                },
+              ),
+              title: Text(
+                type,
+                style: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600),
+              ),
+              onTap: () {
+                setState(() {
+                  selectedType = type;
+                });
+              },
             );
-          } : null, // Disable the button if no type is selected
-          child: const Text('Næste'),
+          },
         ),
-      ),
-    );
-        
-  }
+        Positioned(
+          bottom: 16,
+          left: 0,
+          right: 0,
+          child: Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: Center(
+              child: GestureDetector(
+                onTap: selectedType != null ? () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ApvQuestionPage(type: selectedType),
+                    ),
+                  );
+                } : null,
+                child: Image.asset('assets/log-ud.png'),
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
 }
