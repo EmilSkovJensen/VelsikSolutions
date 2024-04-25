@@ -113,7 +113,7 @@ Widget build(BuildContext context) {
                     ),
                   );
                 } : null,
-                child: Image.asset('assets/log-ud.png'),
+                child: Image.asset('assets/næste.png'),
               ),
             ),
           ),

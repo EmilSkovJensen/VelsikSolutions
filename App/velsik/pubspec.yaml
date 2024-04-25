@@ -12,6 +12,7 @@ dependencies:
   intl: ^0.17.0
   http: ^1.2.1
   shared_preferences: ^2.2.2
+  flash: ^3.1.0
 
 dev_dependencies:
   flutter_test:
@@ -32,3 +33,5 @@ flutter:
     - assets/byggeoganlaeg.png
     - assets/butikogengros.png
     - assets/log-ud.png
+    - assets/næste.png
+    - assets/send.png

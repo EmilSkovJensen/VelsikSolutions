@@ -34,9 +34,10 @@ class _FinalizeApvPageState extends State<FinalizeApvPage> {
  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF2596BE),
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF2596BE),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -44,68 +45,123 @@ class _FinalizeApvPageState extends State<FinalizeApvPage> {
           icon: const Icon(
             Icons.arrow_back_ios,
             size: 20,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
         centerTitle: true,
-        title: const Text("Vælg dato"),
+        title: const Text(
+          "Vælg datoer",
+          style: TextStyle(
+              fontSize: 30,
+              color: Colors.white,
+              fontWeight: FontWeight.w900),
+        ),
       ),
       body: Stack(
         children: [
-          // Your other widgets can go here
-
-          // Date Selector for Start Date
           Positioned(
             top: 20, 
-            left: 20, 
+            left: 20,
+            right: 20, 
             child: ElevatedButton(
               onPressed: () {
                 _selectDate(context, true);
               },
               child: Text(startDate != null
-                  ? 'Start Date: ${DateFormat('yyyy-MM-dd').format(startDate!)}'
-                  : 'Select Start Date'),
+                  ? 'Start dato: ${DateFormat('dd-MM-yyyy').format(startDate!)}'
+                  : 'Vælg start dato', style: const TextStyle(color: Colors.black)),
             ),
           ),
-
-          // Date Selector for End Date
           Positioned(
             top: 80, 
-            left: 20, 
+            left: 20,
+            right: 20,
             child: ElevatedButton(
               onPressed: () {
                 _selectDate(context, false);
               },
               child: Text(endDate != null
-                  ? 'End Date: ${DateFormat('yyyy-MM-dd').format(endDate!)}'
-                  : 'Select End Date'),
+                  ? 'Slut dato: ${DateFormat('dd-MM-yyyy').format(endDate!)}'
+                  : 'Vælg slut dato', style: const TextStyle(color: Colors.black)),
             ),
           ),
+          Positioned(
+              bottom: 16, 
+              left: 0, 
+              right: 0, 
+              child: Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: Center(
+                  child: GestureDetector(
+                    onTap: finalApv.startDate != null && finalApv.endDate != null ? () async {
+                      if (finalApv.endDate!.isBefore(finalApv.startDate!)) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return const AlertDialog(
+                              title: Center(child: Text('Fejl meddelse')),
+                              content: Text('Slut datoen skal ligge efter start datoen', textAlign: TextAlign.center),
+                            );
+                          },
+                        );
+                      } else {
+                        if (await apvService.insertApv(finalApv) == true){
+                          Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const HomePage()),
+                          );
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return const AlertDialog(
+                                title: Center(child: Text('Fejl meddelse')),
+                                content: Text('Der skete en fejl under oprettelsen', textAlign: TextAlign.center),
+                              );
+                          },
+                        );
+                        }
+                      }
+                    } : null,
+                    child: Image.asset('assets/send.png'),
+                  ),
+                ),
+              ),
+            ),
         ],
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ElevatedButton(
-          onPressed: finalApv.startDate != null && finalApv.endDate != null ? () async {
-            if (await apvService.insertApv(finalApv)){
-              Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const HomePage()),
-              );
-            }  
-          } : null, // Disable the button if no type is selected
-          child: const Text('Send'),
-        ),
       ),
     );
   }
 
   Future<void> _selectDate(BuildContext context, bool isStartDate) async {
-    final DateTime? picked = await showDatePicker(
+    final DateTime? picked = await showDialog<DateTime>(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2101),
+      builder: (BuildContext context) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: const ColorScheme.light(
+              primary:   Color(0xFF2596BE), // color of the header and selected date
+              onPrimary: Colors.white, // color of text against the primary color
+              onSurface: Colors.black, // color of the text in the body
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: const Color(0xFF2596BE)
+              ),
+            ),
+          ),
+          child: DatePickerDialog(
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2020),
+            lastDate: DateTime(2101),
+            helpText: "Vælg dato",
+            cancelText: "Afbryd",
+            confirmText: "Vælg",
+            fieldLabelText: "Skriv dato",
+          ),
+        );
+      },
     );
 
     if (picked != null) {
