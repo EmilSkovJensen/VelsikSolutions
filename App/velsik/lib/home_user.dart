@@ -48,50 +48,93 @@ class _HomeUserPageState extends State<HomeUserPage> {
       ), 
       ),
       body: apvs != null && apvs!.isEmpty
-          ? const Center(
-              child: CircularProgressIndicator(), // Placeholder for loading indicator
-            )
-          : ListView.builder(
-              itemCount: apvs!.length,
-              itemBuilder: (context, index) {
-                final apv = apvs![index];
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ResponsePage(apv: apv),
-                    ),
-                  );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Card(
-                      child: ListTile(
-                        title: Text('APV Nummer: ${apv.apvId}'),
-                        subtitle: Text('Start dato: ${DateFormat('dd-MM-yyyy').format(apv.startDate!).toString()}, Slut dato: ${DateFormat('dd-MM-yyyy').format(apv.endDate!).toString()}'),
-                      ),
+          ? Stack(
+            children: [
+              Positioned(
+              top: 0,
+              bottom: 0, 
+              left: 0, 
+              right: 0, 
+              child: Image.asset('assets/checkmark.png', scale: 0.25),
+              ),
+              Positioned(
+              bottom: 16, 
+              left: 0, 
+              right: 0, 
+              child: Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: Center(
+                    child: GestureDetector(
+                      onTap: () async {
+                        final SharedPreferences prefs = await SharedPreferences.getInstance();
+                        final AuthService authService = AuthService(prefs);
+                        await authService.signOut();
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const LoginPage()),
+                        );
+                      },
+                      child: Image.asset('assets/log-ud.png'),
                     ),
                   ),
-                );
-              },
-            ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ElevatedButton(
-          onPressed: () async {
-            final SharedPreferences prefs = await SharedPreferences.getInstance();
-            final AuthService authService = AuthService(prefs);
-            await authService.signOut();
+                ),
+              ),
 
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const LoginPage()),
-            );
-          },
-          child: const Text('Log ud'),
-        ),
-      ),
+            ],
+          ) 
+          : Stack(
+            children: [
+                ListView.builder(
+                itemCount: apvs!.length,
+                itemBuilder: (context, index) {
+                  final apv = apvs![index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ResponsePage(apv: apv),
+                      ),
+                    );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: Card(
+                        child: ListTile(
+                          title: Text('APV Nummer: ${apv.apvId}'),
+                          subtitle: Text('Start dato: ${DateFormat('dd-MM-yyyy').format(apv.startDate!).toString()}, Slut dato: ${DateFormat('dd-MM-yyyy').format(apv.endDate!).toString()}'),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+              Positioned(
+              bottom: 16, 
+              left: 0, 
+              right: 0, 
+              child: Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: Center(
+                    child: GestureDetector(
+                      onTap: () async {
+                        final SharedPreferences prefs = await SharedPreferences.getInstance();
+                        final AuthService authService = AuthService(prefs);
+                        await authService.signOut();
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const LoginPage()),
+                        );
+                      },
+                      child: Image.asset('assets/log-ud.png'),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
     );
   }
 }

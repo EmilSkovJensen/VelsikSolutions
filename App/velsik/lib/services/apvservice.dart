@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velsik/models/question.dart';
 import 'package:velsik/models/apv.dart';
+import 'package:velsik/models/response.dart';
+
 
 class ApvService {
 
@@ -145,6 +147,34 @@ class ApvService {
       }
     }else {
       return null; //ERROR HANDLING
+    }
+  }
+
+  Future<bool> insertResponses(List<Response> responses) async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    
+    List<Map<String, dynamic>> encodedResponses = [];
+    for (Response response in responses){
+      encodedResponses.add(response.toJson());
+    }
+
+    if (token != null) { 
+      final response = await http.post(
+        Uri.parse('http://10.0.2.2:8000/apv/answer'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token', 
+        },
+        body: json.encode({"data": encodedResponses}), 
+      );
+      if (response.statusCode == 200) {
+        return true;
+      }else {
+        return false; //ERROR HANDLING
+      }
+    }else {
+      return false; //ERROR HANDLING
     }
   }
 

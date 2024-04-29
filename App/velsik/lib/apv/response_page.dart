@@ -4,6 +4,7 @@ import 'package:velsik/home_user.dart';
 import 'package:velsik/models/question.dart';
 import 'package:velsik/models/response.dart';
 import 'package:velsik/models/apv.dart';
+import 'package:velsik/services/apvservice.dart';
 
 class ResponsePage extends StatefulWidget {
   final Apv apv;
@@ -24,7 +25,8 @@ class _ResponsePage extends State<ResponsePage> {
     final int? userId = prefs.getInt('userId');
 
     response.userId = userId;
-
+    response.comment = null;
+    
     setState((){
       responses.add(response);
     });
@@ -79,7 +81,6 @@ class _ResponsePage extends State<ResponsePage> {
       ),
       body: Stack(
         children: [
-          // Current question
           Center(
               child: Card(
                 margin: const EdgeInsets.all(10),
@@ -176,16 +177,29 @@ class _ResponsePage extends State<ResponsePage> {
                               );
                             },
                           );
-
                         } else {
-                          Navigator.push(
+                          ApvService apvService = ApvService();
+                          
+                          if (await apvService.insertResponses(responses) == true){
+                            Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => const HomeUserPage()),
-                          );
+                            );
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return const AlertDialog(
+                                  title: Center(child: Text('Fejl meddelse')),
+                                  content: Text('Der skete en fejl under indsendelsen af besvarelsen', textAlign: TextAlign.center),
+                                );
+                              },
+                            );
+                          }
                         }
                         
                       },
-                      child: Image.asset('assets/log-ud.png'),
+                      child: Image.asset('assets/send1.png'),
                     ),
                   ),
                 ),

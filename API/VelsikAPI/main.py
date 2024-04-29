@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException
 from Database.APVConnection import APVConnection
 from Database.Models.APV import APV
+from Database.Models.Response import Response
 from Database.UserConnection import UserConnection
 from Database.Models.User import User
 from auth import AuthHandler
@@ -114,7 +115,7 @@ async def insert_apv(data: dict):
             questions=data.get("questions"),
             users=data.get("users")
         )
-        print(apv)
+
         apv_db.insert_apv(apv)
 
         return {"message": "APV created successfully"}
@@ -126,3 +127,24 @@ async def insert_apv(data: dict):
 async def get_remaining_apvs(user_id: int):
     apvs = apv_db.get_apvs_by_user_id(user_id)
     return {"apvs": apvs}
+
+
+@app.post("/apv/answer")
+async def insert_response(data: dict):
+    try:
+        for obj in data['data']:
+            response = Response(
+                response_id=None,
+                apv_question_id=obj["questionId"],
+                user_id=obj["userId"],
+                answer=obj["answer"],
+                comment=obj["comment"]
+            )
+
+            apv_db.insert_response(response)
+
+        apv_db.complete_apv(data["data"][0]["questionId"], data["data"][0]["userId"])
+
+        return {"message": "Response inserted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {e}")
