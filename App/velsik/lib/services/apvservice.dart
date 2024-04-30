@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velsik/models/question.dart';
 import 'package:velsik/models/apv.dart';
 import 'package:velsik/models/response.dart';
+import 'package:velsik/models/user_response_status.dart';
 
 
 class ApvService {
@@ -176,6 +177,37 @@ class ApvService {
     }else {
       return false; //ERROR HANDLING
     }
+  }
+
+  Future<List<UserResponseStatus>?> getCurrentApvUserStatuses() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    final int? companyId = prefs.getInt('companyId');
+    if (token != null) {
+      final response = await http.get(
+        Uri.parse('http://10.0.2.2:8000/apv/get_response_statuses?company_id=$companyId'),
+        headers: {
+          'Content-Type': 'application/json', // Set the content type to JSON
+          'Authorization': 'Bearer $token', // Include the token in the request headers
+        },
+      );
+      if (response.statusCode == 200) {
+        final String responseBody = utf8.decode(response.bodyBytes); // Decode response body using UTF-8 to be able to see Danish letters in application
+        final Map<String, dynamic> responseData = jsonDecode(responseBody);
+        final List<UserResponseStatus> statuses = [];
+
+        for(final obj in responseData['statuses']){
+          statuses.add(UserResponseStatus(obj['firstname'], obj['lastname'], obj['email'], obj['phone_number'], obj['status']));
+        }
+
+        return statuses;
+      }else {
+        return null; //ERROR HANDLING
+      }
+    }else {
+      return null; //ERROR HANDLING
+    }
+
   }
 
 

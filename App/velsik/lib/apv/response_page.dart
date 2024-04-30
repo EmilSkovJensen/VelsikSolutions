@@ -135,13 +135,59 @@ class _ResponsePage extends State<ResponsePage> {
                           onPressed: responses[currentIndex].answer == false || responses[currentIndex].answer == null ? () {
                               answer(true, "");
                           } : null,
-                          child: const Text('Ja'),
+                          style: ButtonStyle(shape: MaterialStateProperty.all<RoundedRectangleBorder>( const RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.all(
+                                                    Radius.circular(10.0), // Set the border radius to 40px
+                                                  ),
+                                                ),
+                                              ),
+                                              minimumSize: MaterialStateProperty.all(const Size(100, 50)),
+                                              foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                              backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                                                (Set<MaterialState> states) {
+                                                  if (responses[currentIndex].answer == true) {
+                                                    // Change opacity when pressed
+                                                    return const Color.fromARGB(255, 115, 223, 101).withOpacity(0.3); // Adjust the opacity (0.5) as needed
+                                                  }
+                                                  return const Color.fromARGB(255, 115, 223, 101); // Return original color
+                                                },
+                                              ),
+                                            ),
+                          child: const Text('Ja', style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),),
                         ),
                         ElevatedButton(
                           onPressed: responses[currentIndex].answer == true || responses[currentIndex].answer == null ? () {
                               answer(false, "");
                           } : null,
-                          child: const Text('Nej'),
+                          style: ButtonStyle(shape: MaterialStateProperty.all<RoundedRectangleBorder>( const RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.all(
+                                                    Radius.circular(10.0), // Set the border radius to 40px
+                                                  ),
+                                                ),
+                                              ),
+                                              minimumSize: MaterialStateProperty.all(const Size(100, 50)),
+                                              foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                              backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                                                (Set<MaterialState> states) {
+                                                  if (responses[currentIndex].answer == false) {
+                                                    // Change opacity when pressed
+                                                    return const Color.fromARGB(255, 211, 73, 73).withOpacity(0.3); // Adjust the opacity (0.5) as needed
+                                                  }
+                                                  return const Color.fromARGB(255, 211, 73, 73); // Return original color
+                                                },
+                                              ),
+                                            ),
+                          child: Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: const Color.fromARGB(5, 211, 73, 20), // Set the overlay color
+                            ),
+                            child: const Text(
+                              'Nej',
+                              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
+                            ),
+                          ),
                         ),
                       ],
                     ),

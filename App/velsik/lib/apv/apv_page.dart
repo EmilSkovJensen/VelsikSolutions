@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:velsik/apv/current_apv/user_statuses.dart';
+import 'package:velsik/services/apvservice.dart';
 import '../login.dart';
 import 'create_apv/choose_category.dart';
 
@@ -64,8 +66,8 @@ class _ApvPageState extends State<ApvPage> {
                 child: GestureDetector(
                   onTap: () {
                     Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const LoginPage()),
+                        context,
+                        MaterialPageRoute(builder: (context) => const UserStatusesPage()),
                     );
                   },
                   child: Image.asset('assets/nuvaerende-apv.png'),

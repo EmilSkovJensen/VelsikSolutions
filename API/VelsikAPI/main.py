@@ -148,3 +148,9 @@ async def insert_response(data: dict):
         return {"message": "Response inserted successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal Server Error: {e}")
+
+
+@app.get("/apv/get_response_statuses")
+async def get_response_statuses(company_id: int):
+    statuses = apv_db.get_apv_user_statuses(company_id)
+    return {"statuses": statuses}
