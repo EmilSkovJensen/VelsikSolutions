@@ -19,7 +19,7 @@ class _PreviousApvPageState extends State<PreviousApvPage> {
   void initState() {
     super.initState();
 
-    apvService.getApvsByCompanyId().then((allApvs) => {
+    apvService.getPreviousApvsByCompanyId().then((allApvs) => {
       setState(() {
           if(allApvs != null){
             apvs = allApvs;
@@ -35,13 +35,25 @@ class _PreviousApvPageState extends State<PreviousApvPage> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: const Color(0xFF2596BE),
-        automaticallyImplyLeading: false,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            size: 20,
+            color: Colors.white,
+          ),
+        ),
         centerTitle: true,
-        toolbarHeight: 100, 
-        title: const Padding(
-        padding: EdgeInsets.only(top: 20),
-        child: Center(child: Text("Unikabyg A/S", style: TextStyle(fontSize: 50, color: Colors.white, fontWeight: FontWeight.w900))),
-      ), 
+        title: const Text(
+          "Tidligere APV",
+          style: TextStyle(
+            fontSize: 30,
+            color: Colors.white,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
       ),
       body: apvs != null && apvs!.isEmpty
           ? Stack(

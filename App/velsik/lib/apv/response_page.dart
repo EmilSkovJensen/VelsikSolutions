@@ -119,7 +119,7 @@ class _ResponsePage extends State<ResponsePage> {
                         ),
                       ],
                     ),
-                    Image.asset('assets/${responses[currentIndex].questionTitle}.png'),
+                    Center(child: Image.asset('assets/${responses[currentIndex].questionTitle}.png')),
                     ListTile(
                       title: Text(
                           '${responses[currentIndex].questionTitle}', style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w600), textAlign: TextAlign.center),

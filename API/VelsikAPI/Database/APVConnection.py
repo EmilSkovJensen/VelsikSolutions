@@ -205,3 +205,28 @@ class APVConnection:
             print("Error executing SQL query:", e)
 
         return statuses
+
+    def get_previous_apvs(self, company_id):
+        connection = psycopg2.connect(self.connection_string)
+        if not connection:
+            print("Database connection not established.")
+            return None
+
+        previous_apvs = []
+
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """SELECT * FROM apv WHERE company_id = %s ORDER BY apv_id DESC""",
+                    (company_id,))
+
+                all_apvs = cursor.fetchall()
+
+                for obj in all_apvs:
+                    apv = APV(obj[0], obj[1], obj[2], obj[3], None, None)
+                    previous_apvs.append(apv)
+
+        except psycopg2.Error as e:
+            print("Error executing SQL query:", e)
+
+        return previous_apvs

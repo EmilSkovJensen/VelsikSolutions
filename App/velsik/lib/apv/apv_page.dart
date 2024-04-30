@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:velsik/apv/current_apv/user_statuses.dart';
-import 'package:velsik/services/apvservice.dart';
-import '../login.dart';
+import 'package:velsik/apv/previous_apv/previous_apv_page.dart';
 import 'create_apv/choose_category.dart';
 
 class ApvPage extends StatefulWidget {
@@ -25,15 +24,21 @@ class _ApvPageState extends State<ApvPage> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(Icons.arrow_back_ios,
-          size: 20,
-          color: Colors.white,),
-          
-
-
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            size: 20,
+            color: Colors.white,
+          ),
         ),
-        centerTitle: true, 
-        title: const Text("APV-Værktøj", style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.w900)), 
+        centerTitle: true,
+        title: const Text(
+          "APV-Værktøj",
+          style: TextStyle(
+            fontSize: 30,
+            color: Colors.white,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
       ),
       body: Stack(
         children: [
@@ -86,7 +91,7 @@ class _ApvPageState extends State<ApvPage> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const LoginPage()),
+                      MaterialPageRoute(builder: (context) => const PreviousApvPage()),
                     );
                   },
                   child: Image.asset('assets/tidligere-apv.png'),

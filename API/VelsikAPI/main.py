@@ -154,3 +154,9 @@ async def insert_response(data: dict):
 async def get_response_statuses(company_id: int):
     statuses = apv_db.get_apv_user_statuses(company_id)
     return {"statuses": statuses}
+
+
+@app.get("/apv/get_previous_apvs")
+async def get_previous_apvs(company_id: int):
+    apvs = apv_db.get_previous_apvs(company_id)
+    return {"previous_apvs": apvs}

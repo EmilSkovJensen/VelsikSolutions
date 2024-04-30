@@ -5,6 +5,9 @@ class Question {
   int? apvTypeId;
   String questionTitle;
   String questionText;
+  int? trueCount;
+  int? falseCount;
+  List<String>? comments;
 
   Question(
     this.questionId,

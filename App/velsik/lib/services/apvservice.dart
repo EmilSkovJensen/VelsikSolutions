@@ -227,8 +227,8 @@ class ApvService {
         final Map<String, dynamic> responseData = jsonDecode(responseBody);
         final List<Apv> apvs = [];
 
-        for(final obj in responseData['apvs']){
-          //List<Question>? questions = await getQuestionsByApvId(obj['apv_id']); CHANGE TO GET QUESTIONS AND THEIR RESPONSE STATS
+        for(final obj in responseData['previous_apvs']){
+          //List<Question>? questions = await getQuestionsByApvId(obj['apv_id']); CHANGE TO GET QUESTIONS AND THEIR RESPONSE STATS AND INCLUDE IN CREATION OF APV OBJECT
           apvs.add(Apv(obj['apv_id'], obj['company_id'], DateTime.parse(obj['start_date']), DateTime.parse(obj['end_date']), null, null));
         }
 
