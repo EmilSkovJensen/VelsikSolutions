@@ -51,11 +51,16 @@ class _HomeUserPageState extends State<HomeUserPage> {
           ? Stack(
             children: [
               Positioned(
-              top: 0,
-              bottom: 0, 
-              left: 0, 
-              right: 0, 
-              child: Image.asset('assets/checkmark.png', scale: 0.25),
+              top: 30,
+              left: 0,
+              right: 0,
+              child: Image.asset('assets/checkmark.png'),
+              ),
+              const Positioned(
+              top: 270,
+              left: 0,
+              right: 0,
+              child: Center(child: Text("Ingen opgaver", style: TextStyle(fontSize: 35, color: Colors.white, fontWeight: FontWeight.w900))),
               ),
               Positioned(
               bottom: 16, 
