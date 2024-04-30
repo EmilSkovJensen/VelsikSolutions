@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:velsik/apv/create_apv/choose_questions.dart';
 import 'package:velsik/models/question.dart';
 
 
 class EditQuestionPage extends StatefulWidget {
   final Question question;
+  final List<Question> questionList;
+  final String? type;
 
 
-  const EditQuestionPage({super.key, required this.question});
+  const EditQuestionPage({super.key, required this.question, required this.questionList, this.type});
 
   @override
   _EditQuestionPageState createState() => _EditQuestionPageState();
@@ -63,17 +66,13 @@ class _EditQuestionPageState extends State<EditQuestionPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextFormField(
-                    initialValue: widget.question.questionTitle,
-                    decoration: const InputDecoration(
-                      labelText: 'Titel',
-                      border: OutlineInputBorder(),
+                  Text(
+                    widget.question.questionTitle,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      color: Colors.black, // Change color as needed
+                      fontWeight: FontWeight.w600,
                     ),
-                    onChanged: (value) {
-                      setState(() {
-                        widget.question.questionTitle = value;
-                      });
-                    },
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
@@ -99,7 +98,17 @@ class _EditQuestionPageState extends State<EditQuestionPage> {
                 onPressed: () {
                   Navigator.pop(context, widget.question);
                 },
-                child: Text('Gem'),
+                child: const Text('Gem'),
+              ),
+            ),
+            Positioned(
+              bottom: 20,
+              right: 20,
+              child: ElevatedButton(
+                onPressed: () {
+                  _deleteQuestion();
+                },
+                child: const Text('Slet'),
               ),
             ),
           ],
@@ -108,9 +117,22 @@ class _EditQuestionPageState extends State<EditQuestionPage> {
     ),
   ],
 ),
+
     );
+   
   }
+   void _deleteQuestion() {
+  // Remove the widget.question from the questionList
+  widget.questionList.remove(widget.question);
+  // Navigate to the ApvQuestionPage with the updated questionList
+  Navigator.pop(context);
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(
+      builder: (context) => ApvQuestionPage(type: widget.type, questionList: widget.questionList),
+    ),
+  );
+
 }
 
-
-
+}
