@@ -145,3 +145,33 @@ class APVConnection:
             print("Error executing SQL query:", e)
 
         return apvs
+
+    def insert_response(self, response):
+        connection = psycopg2.connect(self.connection_string)
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                                    INSERT INTO response (apv_question_id, user_id, answer, comment)
+                                    VALUES (%s, %s, %s, %s)""", (response.apv_question_id, response.user_id, response.answer, response.comment))
+
+            # Commit the transaction
+            connection.commit()
+            print("Successfully inserted new response")
+        except psycopg2.Error as e:
+            # Rollback the transaction in case of error
+            connection.rollback()
+            raise e
+
+    def complete_apv(self, apv_question_id, user_id):
+        connection = psycopg2.connect(self.connection_string)
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("""UPDATE user_apv_relation SET is_completed = true WHERE user_id = %s AND apv_id = (SELECT apv_id FROM apv_question WHERE apv_question_id = %s)""",
+                               (user_id, apv_question_id))
+
+            # Commit the transaction
+            connection.commit()
+        except psycopg2.Error as e:
+            # Rollback the transaction in case of error
+            connection.rollback()
+            raise e

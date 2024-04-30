@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'services/authservice.dart';
 import 'login.dart';
@@ -97,9 +98,14 @@ class _HomePageState extends State<HomePage> {
                 child: Center(
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ApvPage(userid: _userId)),
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return const AlertDialog(
+                              title: Center(child: Text('Fejl meddelse')),
+                              content: Text('Denne funktion er ikke implementeret endnu', textAlign: TextAlign.center),
+                            );
+                          },
                       );
                     },
                     child: Image.asset('assets/handlingsplan.png'),
@@ -116,9 +122,14 @@ class _HomePageState extends State<HomePage> {
                 child: Center(
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ApvPage(userid: _userId)),
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return const AlertDialog(
+                              title: Center(child: Text('Fejl meddelse')),
+                              content: Text('Denne funktion er ikke implementeret endnu', textAlign: TextAlign.center),
+                            );
+                          },
                       );
                     },
                     child: Image.asset('assets/moeder-og-referater.png'),
@@ -135,9 +146,14 @@ class _HomePageState extends State<HomePage> {
                 child: Center(
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ApvPage(userid: _userId)),
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return const AlertDialog(
+                              title: Center(child: Text('Fejl meddelse')),
+                              content: Text('Denne funktion er ikke implementeret endnu', textAlign: TextAlign.center),
+                            );
+                          },
                       );
                     },
                     child: Image.asset('assets/medarbejdere.png'),

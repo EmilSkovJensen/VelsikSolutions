@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velsik/models/question.dart';
 import 'package:velsik/models/apv.dart';
+import 'package:velsik/models/response.dart';
+
 
 class ApvService {
 
@@ -88,6 +90,35 @@ class ApvService {
     }
   }
 
+  Future<List<Question>?> getQuestionsByApvId(int apvId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    if (token != null) {
+      final response = await http.get(
+        Uri.parse('http://10.0.2.2:8000/apv/get_questions?apv_id=$apvId'),
+        headers: {
+          'Content-Type': 'application/json', // Set the content type to JSON
+          'Authorization': 'Bearer $token', // Include the token in the request headers
+        },
+      );
+      if (response.statusCode == 200) {
+        final String responseBody = utf8.decode(response.bodyBytes); // Decode response body using UTF-8 to be able to see Danish letters in application
+        final Map<String, dynamic> responseData = jsonDecode(responseBody);
+        final List<Question> questions = [];
+
+        for(final obj in responseData['questions']){
+          questions.add(Question(obj[0], obj[1], null, obj[2], obj[3]));
+        }
+
+        return questions;
+      }else {
+        return null; //ERROR HANDLING
+      }
+    }else {
+      return null; //ERROR HANDLING
+    }
+  }
+
   Future<List<Apv>?> getApvsByUserId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('token');
@@ -106,7 +137,8 @@ class ApvService {
         final List<Apv> apvs = [];
 
         for(final obj in responseData['apvs']){
-          apvs.add(Apv(obj['apv_id'], obj['company_id'], DateTime.parse(obj['start_date']), DateTime.parse(obj['end_date']), null, null));
+          List<Question>? questions = await getQuestionsByApvId(obj['apv_id']);
+          apvs.add(Apv(obj['apv_id'], obj['company_id'], DateTime.parse(obj['start_date']), DateTime.parse(obj['end_date']), questions, null));
         }
 
         return apvs;
@@ -115,6 +147,34 @@ class ApvService {
       }
     }else {
       return null; //ERROR HANDLING
+    }
+  }
+
+  Future<bool> insertResponses(List<Response> responses) async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    
+    List<Map<String, dynamic>> encodedResponses = [];
+    for (Response response in responses){
+      encodedResponses.add(response.toJson());
+    }
+
+    if (token != null) { 
+      final response = await http.post(
+        Uri.parse('http://10.0.2.2:8000/apv/answer'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token', 
+        },
+        body: json.encode({"data": encodedResponses}), 
+      );
+      if (response.statusCode == 200) {
+        return true;
+      }else {
+        return false; //ERROR HANDLING
+      }
+    }else {
+      return false; //ERROR HANDLING
     }
   }
 

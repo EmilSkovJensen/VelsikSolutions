@@ -44,66 +44,132 @@ class _ApvReceiversPageState extends State<ApvReceiversPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF2596BE),
       appBar: AppBar(
-        title: const Text('Vælg modtagere'),
+        elevation: 0,
+        backgroundColor: const Color(0xFF2596BE),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            size: 20,
+            color: Colors.white,
+          ),
+        ),
+        centerTitle: true,
+        title: const Text(
+          "Vælg modtagere",
+          style: TextStyle(
+              fontSize: 30,
+              color: Colors.white,
+              fontWeight: FontWeight.w900),
+        ),
       ),
-      body: ListView.builder(
-        itemCount: departments.length,
-        itemBuilder: (context, index) {
-          return ExpansionTile(
-            title: Text(departments[index].departmentName),
-            leading: Checkbox(
-              value: departments[index].users.every((user) => selectedUsers.contains(user)),
-              onChanged: (bool? value) {
-                setState(() {
-                  if (value ?? false) {
-                    for(var i = 0; i < departments[index].users.length; i++){
-                        selectedUsers.remove(departments[index].users[i]);
-                        selectedUsers.add(departments[index].users[i]); 
-                    }
-                    
-                  } else {
-                    for(var i = 0; i < departments[index].users.length; i++){
-                      selectedUsers.remove(departments[index].users[i]);
-                    }
-                  }
-                });
-              },
-            ),
-            children: departments[index].users.map((user) {
-              return Padding(
-          padding: const EdgeInsets.only(left: 16.0),
-              child: ListTile(
-                title: Text("${user.firstname} ${user.lastname}"),
+      body: Stack(
+        children: [
+          ListView.builder(
+            itemCount: departments.length,
+            itemBuilder: (context, index) {
+              return ExpansionTile(
+                iconColor: Colors.white,
+                collapsedIconColor: Colors.white,
+                title: Text(departments[index].departmentName, style: const TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600)),
                 leading: Checkbox(
-                  value: selectedUsers.contains(user),
+                  fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                    if (states.contains(MaterialState.selected)) {
+                      return Colors.white;
+                    }
+                    return Colors.transparent; 
+                  }),
+                  checkColor: const Color(0xFF2596BE), 
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(2.0), 
+                  ),
+                  side: const BorderSide(color: Colors.white),
+                  overlayColor: MaterialStateProperty.all<Color>(Colors.transparent), 
+                  value: departments[index].users.every((user) => selectedUsers.contains(user)),
                   onChanged: (bool? value) {
                     setState(() {
                       if (value ?? false) {
-                        selectedUsers.add(user);
+                        for (var i = 0; i < departments[index].users.length; i++) {
+                          selectedUsers.remove(departments[index].users[i]);
+                          selectedUsers.add(departments[index].users[i]);
+                        }
                       } else {
-                        selectedUsers.remove(user);
+                        for (var i = 0; i < departments[index].users.length; i++) {
+                          selectedUsers.remove(departments[index].users[i]);
+                        }
                       }
                     });
                   },
                 ),
-              ),
+                children: departments[index].users.map((user) {
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    child: ListTile(
+                      title: Text("${user.firstname} ${user.lastname}", style: const TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600)),
+                      leading: Checkbox(
+                        fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                          if (states.contains(MaterialState.selected)) {
+                            return Colors.white;
+                          }
+                          return Colors.transparent; 
+                        }),
+                        checkColor: const Color(0xFF2596BE), 
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(2.0), 
+                        ),
+                        side: const BorderSide(color: Colors.white),
+                        overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
+                        value: selectedUsers.contains(user),
+                        onChanged: (bool? value) {
+                          setState(() {
+                            if (value ?? false) {
+                              selectedUsers.add(user);
+                            } else {
+                              selectedUsers.remove(user);
+                            }
+                          });
+                        },
+                      ),
+                    ),
+                  );
+                }).toList(),
               );
-            }).toList(),
-          );
-        },
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ElevatedButton(
-          onPressed: selectedUsers.isNotEmpty ? () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => FinalizeApvPage(questions: widget.questions, selectedUsers: selectedUsers)),
-            );
-          } : null, // Disable the button if no users is selected
-          child: const Text('Næste'),
-        ),
+            },
+          ),
+          Positioned(
+            bottom: 16, 
+            left: 0, 
+            right: 0, 
+            child: Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: Center(
+                child: GestureDetector(
+                  onTap: selectedUsers.isNotEmpty ? () async {
+                    Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => FinalizeApvPage(
+                                    questions: widget.questions,
+                                    selectedUsers: selectedUsers,
+                                  )),
+                    );
+                  } : null,
+                  child: Image.asset('assets/næste.png'),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
