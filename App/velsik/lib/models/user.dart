@@ -8,6 +8,7 @@ class User {
   String lastname;
   String phoneNumber;
   String userRole;
+  bool? status;
 
   User(
     this.userId,

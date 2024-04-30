@@ -144,7 +144,7 @@ Widget build(BuildContext context) {
                 MaterialPageRoute(builder: (context) => ApvReceiversPage(questions: apvQuestions)),
               );
             },
-            child: Image.asset('assets/log-ud.png'),
+            child: Image.asset('assets/næste.png'),
           ),
         ),
       ),

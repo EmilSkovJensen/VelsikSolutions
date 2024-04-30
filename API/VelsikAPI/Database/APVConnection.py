@@ -3,6 +3,8 @@ from Database.Models.APV import APV
 from Database.BCrypt import BCryptTool
 from configparser import ConfigParser
 
+from Database.Models.UserResponseStatus import UserResponseStatus
+
 
 class APVConnection:
     def __init__(self):
@@ -175,3 +177,31 @@ class APVConnection:
             # Rollback the transaction in case of error
             connection.rollback()
             raise e
+
+    def get_apv_user_statuses(self, company_id):
+        connection = psycopg2.connect(self.connection_string)
+        if not connection:
+            print("Database connection not established.")
+            return None
+
+        statuses = []
+
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """SELECT users.firstname, users.lastname, users.email, users.phone_number, uar.is_completed 
+                             FROM users 
+                             INNER JOIN user_apv_relation uar ON uar.user_id = users.user_id 
+                             WHERE apv_id = (SELECT apv_id FROM apv WHERE company_id = %s ORDER BY apv_id DESC LIMIT 1)""",
+                    (company_id,))
+
+                all_users = cursor.fetchall()
+
+                for obj in all_users:
+                    user_response_status = UserResponseStatus(obj[0], obj[1], obj[2], obj[3], obj[4])
+                    statuses.append(user_response_status)
+
+        except psycopg2.Error as e:
+            print("Error executing SQL query:", e)
+
+        return statuses
