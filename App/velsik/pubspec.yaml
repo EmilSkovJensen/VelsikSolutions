@@ -35,7 +35,22 @@ flutter:
     - assets/log-ud.png
     - assets/næste.png
     - assets/send.png
-    - assets/Fald til lavere niveau.png
-    - assets/Fald og snublen.png
     - assets/send1.png
     - assets/checkmark.png
+    - assets/Fald til lavere niveau.png
+    - assets/Fald og snublen.png
+    - assets/Akut fysisk overbelastning.png
+    - assets/Ulykker med håndværktøj og håndmaskiner.png
+    - assets/Intern færdsel.png
+    - assets/Høj støj.png
+    - assets/Dårlige arbejdsstillinger.png
+    - assets/Ensidigt, belastende arbejde.png
+    - assets/Tunge løft.png
+    - assets/Træk og skub.png
+    - assets/Stor arbejdsmængde, tidspres og uklare krav.png
+    - assets/Hjælp og støtte fra ledelse og kolleger.png
+    - assets/Krænkende handlinger.png
+    - assets/Psykisk førstehjælp.png
+    - assets/Farlige stoffer og materialer.png
+    - assets/Støv.png
+    - assets/Hånd-armvibrationer.png
