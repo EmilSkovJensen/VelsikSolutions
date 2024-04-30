@@ -108,7 +108,7 @@ class _EditQuestionPageState extends State<EditQuestionPage> {
                 onPressed: () {
                   _deleteQuestion();
                 },
-                child: Text('Slet'),
+                child: const Text('Slet'),
               ),
             ),
           ],
