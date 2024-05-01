@@ -91,6 +91,11 @@ async def get_questions(apv_id: str):
     return {"questions": questions}
 
 
+@app.get("/apv/get_question_stats")
+async def get_questions(apv_id: str):
+    questions = apv_db.get_question_stats(apv_id)
+    return {"questions": questions}
+
 @app.get("/apv/get_types")
 async def get_types(apv_category: str):
     types = apv_db.get_apv_types(apv_category)

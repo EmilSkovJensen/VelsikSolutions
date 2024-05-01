@@ -52,6 +52,31 @@ class APVConnection:
 
         return questions
 
+    def get_question_stats(self, apv_id):
+        connection = psycopg2.connect(self.connection_string)
+        if not connection:
+            print("Database connection not established.")
+            return None
+
+        questions = []
+
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """SELECT aq.apv_question_id, aq.question_title, aq.question_text, 
+                                (SELECT COUNT(*) FROM user_apv_relation WHERE apv_id = aq.apv_id) AS total_attendees,
+                                (SELECT COUNT(*) FROM response WHERE response.apv_question_id = aq.apv_question_id AND response.answer = true) AS yes_count,
+                                (SELECT COUNT(*) FROM response WHERE response.apv_question_id = aq.apv_question_id AND response.answer = false) AS no_count 
+                            FROM apv_question aq 
+                            INNER JOIN response ON response.apv_question_id = aq.apv_question_id WHERE aq.apv_id = %s""",
+                    (apv_id,))
+
+                questions = cursor.fetchall()
+        except psycopg2.Error as e:
+            print("Error executing SQL query:", e)
+
+        return questions
+
     def get_apv_types(self, category_name):
         connection = psycopg2.connect(self.connection_string)
         if not connection:

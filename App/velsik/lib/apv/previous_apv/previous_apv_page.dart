@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:velsik/apv/response_page.dart';
+import 'package:velsik/apv/previous_apv/apv_statistics.dart';
 import 'package:velsik/models/apv.dart';
 import 'package:velsik/services/apvservice.dart';
 import 'package:intl/intl.dart'; 
@@ -83,7 +83,7 @@ class _PreviousApvPageState extends State<PreviousApvPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ResponsePage(apv: apv), //CHANGE TO APV STATS PAGE
+                          builder: (context) => ApvStatisticsPage(apv: apv),
                         ),
                       );
                     },
