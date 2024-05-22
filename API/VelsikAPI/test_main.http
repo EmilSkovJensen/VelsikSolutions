@@ -6,8 +6,8 @@ POST http://127.0.0.1:8000/login
 Content-Type: application/json
 
 {
-  "email": "example@example.com",
-  "password": "password123"
+  "email": "test@test.com",
+  "password": "123"
 }
 
 ### Test Token Usage
@@ -34,8 +34,9 @@ Content-Type: application/json
 
 ### Get a user by ID
 
-GET http://127.0.0.1:8000/user/getbyid?user_id=1
+GET http://127.0.0.1:8000/user/getbyid?users_id=1
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTYzNTkyNzEsImlhdCI6MTcxNjM1ODk3MSwic3ViIjoxfQ.MhFyIl235gu86SUeV-dOnUKarXKCwxkEkuXlDFsmehU
 
 ### Get template questions
 

@@ -10,10 +10,15 @@ class UserService {
   Future<User> getUserById() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final int? userId = prefs.getInt('userId');
-    if (userId != null) {
+    final String? token = prefs.getString('token');
+    if (userId != null && token !=null) {
       final response = await http.get(
-        Uri.parse('http://10.0.2.2:8000/user/getbyid?user_id=$userId'),
+        Uri.parse('http://10.0.2.2:8000/user/getbyid?users_id=$userId'),
+        headers: {
+          'Authorization': 'Bearer $token', // Include the token in the request headers
+        },
       );
+
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         final fetchedUser = responseData['user'];
@@ -30,14 +35,17 @@ class UserService {
 
   Future<List<Department>?> getDepartmentsAndUsersByCompanyId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final int? userId = prefs.getInt('userId');
+    final String? token = prefs.getString('token');
     final int? companyId = prefs.getInt('companyId');
    
     List<Department> departments = [];
 
-    if (userId != null) {
+    if (token != null) {
       final response = await http.get(
         Uri.parse('http://10.0.2.2:8000/department/get_departments_and_users?company_id=$companyId'),
+        headers: {
+          'Authorization': 'Bearer $token', // Include the token in the request headers
+        },
       );
       if (response.statusCode == 200) {
         final String responseBody = utf8.decode(response.bodyBytes);

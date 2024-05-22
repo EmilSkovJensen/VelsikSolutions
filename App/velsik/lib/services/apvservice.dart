@@ -16,6 +16,9 @@ class ApvService {
     if (token != null) {
       final response = await http.get(
         Uri.parse('http://10.0.2.2:8000/apv/get_template_questions?apv_type=$typeName'),
+        headers: {
+          'Authorization': 'Bearer $token', // Include the token in the request headers
+        },
       );
       if (response.statusCode == 200) {
         final String responseBody = utf8.decode(response.bodyBytes); // Decode response body using UTF-8 to be able to see Danish letters in application

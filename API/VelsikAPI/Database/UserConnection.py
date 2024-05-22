@@ -42,8 +42,6 @@ class UserConnection:
 
                 data = cursor.fetchone()
 
-                print(data[3])
-
                 user = User(
                     user_id=data[0],
                     company_id=data[1],
@@ -90,9 +88,6 @@ class UserConnection:
 
             if user is None:
                 return False
-
-            print(password)
-            print(user[4])
 
             if BCryptTool.validate_password(password, user[4]):
                 return user

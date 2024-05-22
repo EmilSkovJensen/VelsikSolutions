@@ -74,43 +74,44 @@ async def decode_token(token: str):
 
 
 @app.get("/user/getbyid")
-async def get_user_by_id(user_id: int):
-    user = user_db.get_user_by_user_id(user_id)
+async def get_user_by_id(users_id: int, user_id=Depends(auth_handler.auth_wrapper)):
+    user = user_db.get_user_by_user_id(users_id)
     return {"user": user}
 
 
 @app.get("/apv/get_template_questions")
-async def get_template_questions(apv_type: str):
+async def get_template_questions(apv_type: str, user_id=Depends(auth_handler.auth_wrapper)):
     questions = apv_db.get_template_questions(apv_type)
     return {"questions": questions}
 
 
 @app.get("/apv/get_questions")
-async def get_questions(apv_id: str):
+async def get_questions(apv_id: str, user_id=Depends(auth_handler.auth_wrapper)):
     questions = apv_db.get_questions(apv_id)
     return {"questions": questions}
 
 
 @app.get("/apv/get_question_stats")
-async def get_questions(apv_id: str):
+async def get_questions(apv_id: str, user_id=Depends(auth_handler.auth_wrapper)):
     questions = apv_db.get_question_stats(apv_id)
     return {"questions": questions}
 
+
 @app.get("/apv/get_types")
-async def get_types(apv_category: str):
+async def get_types(apv_category: str, user_id=Depends(auth_handler.auth_wrapper)):
     types = apv_db.get_apv_types(apv_category)
     return {"types": types}
 
 
 @app.get("/department/get_departments_and_users")
-async def get_departments_and_users(company_id: int):
+async def get_departments_and_users(company_id: int, user_id=Depends(auth_handler.auth_wrapper)):
     departments = user_db.get_departments_and_users(company_id)
 
     return {"departments": departments}
 
 
 @app.post("/apv/insert")
-async def insert_apv(data: dict):
+async def insert_apv(data: dict, user_id=Depends(auth_handler.auth_wrapper)):
     try:
         apv = APV(
             apv_id=None,
@@ -129,13 +130,13 @@ async def insert_apv(data: dict):
 
 
 @app.get("/apv/get_remaining_apvs")
-async def get_remaining_apvs(user_id: int):
-    apvs = apv_db.get_apvs_by_user_id(user_id)
+async def get_remaining_apvs(users_id: int, user_id=Depends(auth_handler.auth_wrapper)):
+    apvs = apv_db.get_apvs_by_user_id(users_id)
     return {"apvs": apvs}
 
 
 @app.post("/apv/answer")
-async def insert_response(data: dict):
+async def insert_response(data: dict, user_id=Depends(auth_handler.auth_wrapper)):
     try:
         for obj in data['data']:
             response = Response(
@@ -156,12 +157,12 @@ async def insert_response(data: dict):
 
 
 @app.get("/apv/get_response_statuses")
-async def get_response_statuses(company_id: int):
+async def get_response_statuses(company_id: int, user_id=Depends(auth_handler.auth_wrapper)):
     statuses = apv_db.get_apv_user_statuses(company_id)
     return {"statuses": statuses}
 
 
 @app.get("/apv/get_previous_apvs")
-async def get_previous_apvs(company_id: int):
+async def get_previous_apvs(company_id: int, user_id=Depends(auth_handler.auth_wrapper)):
     apvs = apv_db.get_previous_apvs(company_id)
     return {"previous_apvs": apvs}
