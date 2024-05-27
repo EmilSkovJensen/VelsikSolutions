@@ -164,7 +164,7 @@ class ApvService {
     final int? userId = prefs.getInt('userId');
     if (token != null) {
       final response = await http.get(
-        Uri.parse('http://10.0.2.2:8000/apv/get_remaining_apvs?user_id=$userId'),
+        Uri.parse('http://10.0.2.2:8000/apv/get_remaining_apvs?users_id=$userId'),
         headers: {
           'Content-Type': 'application/json', // Set the content type to JSON
           'Authorization': 'Bearer $token', // Include the token in the request headers
@@ -271,6 +271,35 @@ class ApvService {
         }
 
         return apvs;
+      }else {
+        return null; //ERROR HANDLING
+      }
+    }else {
+      return null; //ERROR HANDLING
+    }
+  }
+
+  Future<List<String>?> getCommentsByQuestionId(int? questionId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    if (token != null) {
+      final response = await http.get(
+        Uri.parse('http://10.0.2.2:8000/question/get_comments_by_question_id?question_id=$questionId'),
+        headers: {
+          'Content-Type': 'application/json', // Set the content type to JSON
+          'Authorization': 'Bearer $token', // Include the token in the request headers
+        },
+      );
+      if (response.statusCode == 200) {
+        final String responseBody = utf8.decode(response.bodyBytes); // Decode response body using UTF-8 to be able to see Danish letters in application
+        final Map<String, dynamic> responseData = jsonDecode(responseBody);
+        final List<String> comments = [];
+
+        for(final obj in responseData['comments']){
+          comments.add(obj);
+        }
+
+        return comments;
       }else {
         return null; //ERROR HANDLING
       }

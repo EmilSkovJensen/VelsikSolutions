@@ -74,7 +74,7 @@ async def decode_token(token: str):
 
 
 @app.get("/user/getbyid")
-async def get_user_by_id(users_id: int, user_id=Depends(auth_handler.auth_wrapper)):
+async def get_user_by_id(users_id: int):
     user = user_db.get_user_by_user_id(users_id)
     return {"user": user}
 
@@ -166,3 +166,9 @@ async def get_response_statuses(company_id: int, user_id=Depends(auth_handler.au
 async def get_previous_apvs(company_id: int, user_id=Depends(auth_handler.auth_wrapper)):
     apvs = apv_db.get_previous_apvs(company_id)
     return {"previous_apvs": apvs}
+
+
+@app.get("/question/get_comments_by_question_id")
+async def get_comments_by_question_id(question_id: int, user_id=Depends(auth_handler.auth_wrapper)):
+    comments = apv_db.get_comments_by_question_id(question_id)
+    return {"comments": comments}

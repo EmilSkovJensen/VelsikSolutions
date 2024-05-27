@@ -19,6 +19,7 @@ class _ResponsePage extends State<ResponsePage> {
   int currentIndex = 0;
   List<Response> responses = [];
   bool isAllAnswered = true; 
+  TextEditingController commentController = TextEditingController();
 
   void prepareAnswers(Response response) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -30,6 +31,59 @@ class _ResponsePage extends State<ResponsePage> {
     setState((){
       responses.add(response);
     });
+  }
+
+  void showCommentDialog(BuildContext context, Function(String) onSubmit) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.transparent,
+          title: const Text('For at gå videre skal du tilføje en kommentar'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                TextField(
+                  controller: commentController,
+                  decoration: const InputDecoration(
+                    hintText: 'Skriv her',
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFF2596BE)),
+                    ),
+                    
+                  ),
+                  cursorColor: const Color(0xFF2596BE),
+                  maxLines: null, // allows multiple lines
+                  keyboardType: TextInputType.multiline,
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Afbryd', style: TextStyle(color: Colors.black)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF2596BE)),
+              ),
+              child: const Text('Tilføj', style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                if (commentController.text.isNotEmpty) {
+                  onSubmit(commentController.text);
+                  Navigator.of(context).pop();
+                  commentController.text = "";
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void answer(bool answer, String comment) {
@@ -61,6 +115,7 @@ class _ResponsePage extends State<ResponsePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFF2596BE),
       appBar: AppBar(
         elevation: 0,
@@ -133,7 +188,9 @@ class _ResponsePage extends State<ResponsePage> {
                       children: [
                         ElevatedButton(
                           onPressed: responses[currentIndex].answer == false || responses[currentIndex].answer == null ? () {
-                              answer(true, "");
+                              showCommentDialog(context, (comment) {
+                                  answer(true, comment);
+                              });
                           } : null,
                           style: ButtonStyle(shape: MaterialStateProperty.all<RoundedRectangleBorder>( const RoundedRectangleBorder(
                                                   borderRadius: BorderRadius.all(

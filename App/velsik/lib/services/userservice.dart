@@ -14,9 +14,6 @@ class UserService {
     if (userId != null && token !=null) {
       final response = await http.get(
         Uri.parse('http://10.0.2.2:8000/user/getbyid?users_id=$userId'),
-        headers: {
-          'Authorization': 'Bearer $token', // Include the token in the request headers
-        },
       );
 
       if (response.statusCode == 200) {

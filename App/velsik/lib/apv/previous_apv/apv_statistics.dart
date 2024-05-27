@@ -21,6 +21,20 @@ class _ApvStatisticsPageState extends State<ApvStatisticsPage> {
     super.initState();
   }
   
+  Color? getTileColor(int? totalAttendees, int? yesCount) {
+    double yesPercentage = yesCount! / totalAttendees!;
+
+    if (yesPercentage >= 0.75) {
+      return Colors.redAccent[100]; // pastel red
+    } else if (yesPercentage >= 0.50) {
+      return Colors.orangeAccent[100]; // pastel orange
+    } else if (yesPercentage >= 0.25) {
+      return Colors.yellowAccent[100]; // pastel yellow
+    } else {
+      return Colors.greenAccent[100]; // pastel green
+    }
+  }
+
  @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
@@ -56,7 +70,6 @@ class _ApvStatisticsPageState extends State<ApvStatisticsPage> {
             children: [
               ListView(
                 children: widget.apv.questions!.asMap().entries.map((entry) {
-                  final int index = entry.key;
                   final Question question = entry.value;
                   return GestureDetector(
                     onTap: () {
@@ -66,23 +79,37 @@ class _ApvStatisticsPageState extends State<ApvStatisticsPage> {
                         MaterialPageRoute(builder: (context) => QuestionStatisticsPage(question: question)),
                       );
                     },
-                    child: ListTile(
-                      leading: Text(
-                        (index + 1).toString(),
-                        style: const TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600), // Adjust the font size as needed
-                      ), // Placement number
-                      title: Text(
-                        question.questionTitle,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
+                    child: Stack(
+                      children: [
+                        ListTile(
+                          title: Text(
+                            question.questionTitle,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          subtitle: Text(
+                            "Ja: ${question.yesCount}    Nej: ${question.noCount}",
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          tileColor: entry.key.isOdd ? oddItemColor : evenItemColor,
                         ),
-                      ),
-                      tileColor: entry.key.isOdd ? oddItemColor : evenItemColor,
+                        Positioned(
+                          right: 0,
+                          top: 0,
+                          bottom: 0,
+                          width: MediaQuery.of(context).size.width * 0.07,
+                          child: Container(
+                            color: getTileColor(question.totalAttendees, question.yesCount), // Change to your desired color
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 }).toList(),

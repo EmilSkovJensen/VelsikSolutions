@@ -68,7 +68,7 @@ class APVConnection:
                                 (SELECT COUNT(*) FROM response WHERE response.apv_question_id = aq.apv_question_id AND response.answer = true) AS yes_count,
                                 (SELECT COUNT(*) FROM response WHERE response.apv_question_id = aq.apv_question_id AND response.answer = false) AS no_count 
                             FROM apv_question aq 
-                            INNER JOIN response ON response.apv_question_id = aq.apv_question_id WHERE aq.apv_id = %s""",
+                            INNER JOIN response ON response.apv_question_id = aq.apv_question_id WHERE aq.apv_id = %s ORDER BY yes_count DESC""",
                     (apv_id,))
 
                 questions = cursor.fetchall()
@@ -242,7 +242,7 @@ class APVConnection:
         try:
             with connection.cursor() as cursor:
                 cursor.execute(
-                    """SELECT * FROM apv WHERE company_id = %s ORDER BY apv_id DESC""",
+                    """SELECT * FROM apv WHERE company_id = %s AND apv.end_date <= CURRENT_DATE ORDER BY apv_id DESC""",
                     (company_id,))
 
                 all_apvs = cursor.fetchall()
@@ -255,3 +255,27 @@ class APVConnection:
             print("Error executing SQL query:", e)
 
         return previous_apvs
+
+    def get_comments_by_question_id(self, question_id):
+        connection = psycopg2.connect(self.connection_string)
+        if not connection:
+            print("Database connection not established.")
+            return None
+
+        comments = []
+
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """SELECT comment FROM response WHERE apv_question_id = %s""",
+                    (question_id,))
+
+                all_comments = cursor.fetchall()
+
+                for comment in all_comments:
+                    comments.append(comment[0])
+
+        except psycopg2.Error as e:
+            print("Error executing SQL query:", e)
+
+        return comments

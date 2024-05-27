@@ -11,12 +11,9 @@ class AuthHandler:
     security = HTTPBearer()
     secret = 'SECRET'
 
-    def verify_password(self, email, password):
-        return db.compare_passwords(email, password)
-
     def encode_token(self, user_id):
         payload = {
-            'exp': datetime.utcnow() + timedelta(days=0, minutes=5),
+            'exp': datetime.utcnow() + timedelta(days=1, minutes=0),
             'iat': datetime.utcnow(),
             'sub': user_id,
         }
