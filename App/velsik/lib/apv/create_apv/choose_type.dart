@@ -18,15 +18,27 @@ class _ApvTypePageState extends State<ApvTypePage> {
   final ApvService apvService = ApvService();
   List<String> apvTypes = [];
   String? selectedType;
+  
+  final Stopwatch stopwatch = Stopwatch();
 
  @override
   void initState() {
     super.initState();
 
+    stopwatch.start();
+
     apvService.getApvTypesByCategory(widget.category).then((types) {
       if(types != null){
         setState(() {
           apvTypes = types;
+        });
+
+        // addPostFrameCallback for at sikre at den er færdig med at build siden
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          // Stop uret
+          stopwatch.stop();
+          int elapsedMilliseconds = stopwatch.elapsedMilliseconds;
+          print('Data load time: $elapsedMilliseconds ms');
         });
       } 
     });
