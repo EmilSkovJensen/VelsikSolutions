@@ -72,11 +72,11 @@ Widget build(BuildContext context) {
     Positioned.fill(
       child: ReorderableListView(
         buildDefaultDragHandles: true,
-        padding: const EdgeInsets.only(bottom: 140.0), // Adjust bottom padding to make space for the image
+        padding: const EdgeInsets.only(bottom: 140.0), 
         proxyDecorator: (Widget child, int index, Animation<double> animation) {
           return Material(
-            color: const Color(0xFF2596BE), // Set your odd/even colors here
-            elevation: 6.0, // You can change this value to match your design
+            color: const Color(0xFF2596BE), 
+            elevation: 6.0, 
             child: child,
           );
         },
@@ -84,14 +84,14 @@ Widget build(BuildContext context) {
           final int index = entry.key;
           final Question question = entry.value;
           return ListTile(
-            key: Key(question.questionId.toString()), // Each list tile needs a unique key
+            key: Key(question.questionId.toString()), 
             leading: Text(
               (index + 1).toString(),
               style: const TextStyle(
                   fontSize: 20,
                   color: Colors.white,
-                  fontWeight: FontWeight.w600), // Adjust the font size as needed
-            ), // Placement number
+                  fontWeight: FontWeight.w600), 
+            ), 
             title: Text(
               question.questionTitle,
               style: const TextStyle(
@@ -113,7 +113,7 @@ Widget build(BuildContext context) {
                   },
                   child: const Icon(Icons.edit, color: Colors.white),
                 ),
-                const SizedBox(width: 8), // Adjust the spacing as needed
+                const SizedBox(width: 8), 
                 const Icon(Icons.drag_handle, color: Colors.white),
               ],
             ),
@@ -122,7 +122,7 @@ Widget build(BuildContext context) {
         onReorder: (oldIndex, newIndex) {
           setState(() {
             if (newIndex > oldIndex) {
-              newIndex -= 1; // Adjust index after removing the element
+              newIndex -= 1; 
             }
             final Question question = apvQuestions.removeAt(oldIndex);
             apvQuestions.insert(newIndex, question);

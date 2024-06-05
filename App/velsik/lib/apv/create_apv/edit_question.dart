@@ -70,14 +70,14 @@ class _EditQuestionPageState extends State<EditQuestionPage> {
                     widget.question.questionTitle,
                     style: const TextStyle(
                       fontSize: 20,
-                      color: Colors.black, // Change color as needed
+                      color: Colors.black, 
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
                     initialValue: widget.question.questionText,
-                    maxLines: null, // Allow multiple lines
+                    maxLines: null,
                     decoration: const InputDecoration(
                       labelText: 'Tekst',
                       border: OutlineInputBorder(),
@@ -122,9 +122,9 @@ class _EditQuestionPageState extends State<EditQuestionPage> {
    
   }
    void _deleteQuestion() {
-  // Remove the widget.question from the questionList
+
   widget.questionList.remove(widget.question);
-  // Navigate to the ApvQuestionPage with the updated questionList
+
   Navigator.pop(context);
   Navigator.pushReplacement(
     context,
