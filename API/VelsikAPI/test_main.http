@@ -1,25 +1,9 @@
 # Test your FastAPI endpoints
-
-### Get token by logging in
-
-POST http://127.0.0.1:8000/login
-Content-Type: application/json
-
-{
-  "email": "test@test.com",
-  "password": "123"
-}
-
-### Test Token Usage
-
-GET http://127.0.0.1:8000/
-Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTI2NjU5NTAsImlhdCI6MTcxMjY2NTY1MCwic3ViIjoxfQ.BVniLyj462k2wgGyB73fSohjZrcHqevS1L3Qe8dc-Js
-
 ### Insert a user
 
 POST http://127.0.0.1:8000/user/insert
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "company_id": 1,
@@ -32,40 +16,82 @@ Content-Type: application/json
   "user_role": "user"
 }
 
+> {% client.assert(response.status === 200, "Insert user has failed the test"); %}
+
+### Get token by logging in
+POST http://127.0.0.1:8000/login
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "123"
+}
+
+> {%
+    if (response.status !== 200){
+        client.global.set("token", "");
+    } else {
+        client.global.set("token", response.body.token);
+    }
+    const token = client.global.get("token");
+    console.log(token);
+    client.assert(response.status === 200, "Get token by logging in has failed the test");
+%}
+
 ### Get a user by ID
 
-GET http://127.0.0.1:8000/user/getbyid?userss_id=1
+GET http://127.0.0.1:8000/user/getbyid?users_id=1
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTYzNjEyNDUsImlhdCI6MTcxNjM2MDk0NSwic3ViIjoxfQ.XvlusttjS-pB_BVNYZI-1LzfJi2I44_2nfm8n8T8ORs
+Authorization: Bearer {{token}}
+
+> {% client.assert(response.status === 200, "Get user by Id has failed the test"); %}
 
 ### Get template questions
 
 GET http://127.0.0.1:8000/apv/get_template_questions?apv_type=Murervirksomheder
 Accept: application/json
+Authorization: Bearer {{token}}
+
+> {% client.assert(response.status === 200, "Get template questions has failed the test"); %}
 
 ### Get types by category name
 
 GET http://127.0.0.1:8000/apv/get_types?apv_category=Bygge og anlæg
 Accept: application/json
+Authorization: Bearer {{token}}
+
+> {% client.assert(response.status === 200, "Get types by category name has failed the test"); %}
 
 ### Get departments and users by company_id
 
 GET http://127.0.0.1:8000/department/get_departments_and_users?company_id=1
 Accept: application/json
+Authorization: Bearer {{token}}
+
+> {% client.assert(response.status === 200, "Get departments and users by company_id has failed the test"); %}
 
 ### Get remaining apvs by user_id
 
-GET http://127.0.0.1:8000/apv/get_remaining_apvs?user_id=1
+GET http://127.0.0.1:8000/apv/get_remaining_apvs?users_id=1
 Accept: application/json
+Authorization: Bearer {{token}}
+
+> {% client.assert(response.status === 200, "Get remaining apvs by user_id has failed the test"); %}
 
 ### Get questions by apv_id
 
 GET http://127.0.0.1:8000/apv/get_questions?apv_id=24
 Accept: application/json
+Authorization: Bearer {{token}}
+
+> {% client.assert(response.status === 200, "Get questions by apv_id has failed the test"); %}
 
 ### Get previous apvs by company_id
 
 GET http://127.0.0.1:8000/apv/get_previous_apvs?company_id=1
 Accept: application/json
+Authorization: Bearer {{token}}
+
+> {% client.assert(response.status === 200, "Get previous apvs by company_id has failed the test"); %}
 
 ###
