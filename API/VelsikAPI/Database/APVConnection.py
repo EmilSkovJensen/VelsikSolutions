@@ -68,7 +68,7 @@ class APVConnection:
                                 (SELECT COUNT(*) FROM response WHERE response.apv_question_id = aq.apv_question_id AND response.answer = true) AS yes_count,
                                 (SELECT COUNT(*) FROM response WHERE response.apv_question_id = aq.apv_question_id AND response.answer = false) AS no_count 
                             FROM apv_question aq 
-                            INNER JOIN response ON response.apv_question_id = aq.apv_question_id WHERE aq.apv_id = %s ORDER BY yes_count DESC""",
+                            INNER JOIN response ON response.apv_question_id = aq.apv_question_id WHERE aq.apv_id = %s GROUP BY aq.apv_question_id, aq.question_title, aq.question_text ORDER BY yes_count DESC""",
                     (apv_id,))
 
                 questions = cursor.fetchall()
