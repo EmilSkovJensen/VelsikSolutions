@@ -15,6 +15,13 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.black, // This is where you set your primary color
+          primary: Colors.black, // This sets the primary color used throughout the app
+        ),
+        useMaterial3: true, // Optional: If you want to use Material Design 3
+      ),
       home: Directionality(
         textDirection: TextDirection.ltr, // Adjust this according to your app's text direction
         child: FutureBuilder<bool>(
